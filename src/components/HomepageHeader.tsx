@@ -1,29 +1,29 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
 import { MenuContext } from "../util/MenuContext";
 import { Icon } from "./Icon";
 
 
-export const SubpageHeader: React.FC<Omit<Props, "openMenu">> = (p) => (
+export const HomepageHeader: React.FC<Omit<Props, "openMenu">> = (p) => (
     <MenuContext.Consumer>
-        {({ open, setOpen }) => <SubpageHeaderNo openMenu={() => setOpen(true)} {...p} />}
+        {({ open, setOpen }) => <HomepageHeaderNo openMenu={() => setOpen(true)} {...p} />}
     </MenuContext.Consumer>
 )
 
-export const SubpageHeaderNo: React.FC<Props> = (p: Props) => (
+export const HomepageHeaderNo: React.FC<Props> = (p: Props) => (
     <div>
         <header>
             <div className="content">
-                <div className="back-arrow">
-                    <Link to={p.backUrl}><Icon chevron-left /></Link>
+                <div className="avatar">
+                    <img src="./assets/images/user-colored.svg" alt="" />
                 </div>
-                <div className="page-title">{p.pageTitle}</div>
-
+                <div className="text">
+                    <div className="primary">Tim Speelman</div>
+                    <div className="secondary">Self-Sovereign Identity</div>
+                </div>
                 <div className="burger-menu" onClick={p.openMenu}>
                     <Icon bars />
                 </div>
-
             </div>
 
             <div className="background"></div>
@@ -34,7 +34,5 @@ export const SubpageHeaderNo: React.FC<Props> = (p: Props) => (
 )
 
 interface Props {
-    backUrl: string;
-    pageTitle: string;
     openMenu: () => any;
 }

@@ -17,7 +17,6 @@ export class ContactDetailPage extends React.Component<{}, State> {
                 <SubpageHeader
                     pageTitle={"Contact"}
                     backUrl={"/contacts"}
-                    toggleMenu={() => { }}
                 />
 
                 <main>

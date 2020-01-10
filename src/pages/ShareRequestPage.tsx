@@ -14,7 +14,6 @@ export class ShareRequestPage extends React.Component<{}, State> {
                 <SubpageHeader
                     pageTitle={"Request Credential"}
                     backUrl={"/"}
-                    toggleMenu={() => { }}
                 />
 
                 <main className="text-center">

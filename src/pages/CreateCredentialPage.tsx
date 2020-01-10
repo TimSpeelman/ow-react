@@ -26,7 +26,6 @@ export class CreateCredentialPage extends React.Component<{}, State> {
                 <SubpageHeader
                     pageTitle={"Request Credential"}
                     backUrl={"/"}
-                    toggleMenu={() => { }}
                 />
                 <main className="text-center">
                     <h1>Request new credentials</h1>

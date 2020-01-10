@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Icon } from "./Icon";
 
 export const BottomTools: React.FC<Props> = (p: Props) => (
     <div className="bottom-tools">
@@ -11,7 +12,7 @@ export const BottomTools: React.FC<Props> = (p: Props) => (
         {!p.showPlus ? "" :
             <Link className="fab-btn secondary bottom-right" style={{ fontSize: "2em" }}
                 to="/create">
-                <span className="fas fa-plus"></span>
+                <Icon plus />
             </Link>
         }
     </div>

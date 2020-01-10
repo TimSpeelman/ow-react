@@ -16,7 +16,6 @@ export class ReceiveAttributesPage extends React.Component<{}, State> {
                 <SubpageHeader
                     pageTitle={"Receive Credentials"}
                     backUrl={"/"}
-                    toggleMenu={() => { }}
                 />
 
                 <main className="text-center" >

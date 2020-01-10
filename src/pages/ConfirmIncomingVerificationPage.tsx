@@ -17,7 +17,7 @@ export class ConfirmIncomingVerificationPage extends React.Component<{}, State> 
                 <SubpageHeader
                     pageTitle={"Verification Request"}
                     backUrl={"/"}
-                    toggleMenu={() => { }} />
+                />
 
                 <main className="text-center" >
                     <h1>Someone wishes to verify</h1>

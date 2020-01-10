@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from "../components/Button";
 import { SubpageHeader } from "../components/SubpageHeader";
 
 export class ConfirmContactPage extends React.Component<{}, State> {
@@ -14,7 +15,6 @@ export class ConfirmContactPage extends React.Component<{}, State> {
                 <SubpageHeader
                     pageTitle={"Add Contact (QR)"}
                     backUrl={"/contacts"}
-                    toggleMenu={() => { }}
                 />
 
                 <main>
@@ -38,8 +38,8 @@ export class ConfirmContactPage extends React.Component<{}, State> {
                         </tr>
                     </table>
 
-                    <button className="btn primary" onClick={() => this.confirmRequest()} disabled={loading}>Trust and add to contacts</button>
-                    <button className="btn secondary" onClick={() => this.denyRequest()} disabled={loading}>Cancel</button>
+                    <Button primary onClick={() => this.confirmRequest()} disabled={loading}>Trust and add to contacts</Button>
+                    <Button onClick={() => this.denyRequest()} disabled={loading}>Cancel</Button>
 
 
                 </main>

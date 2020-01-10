@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from "../components/Icon";
 import { SubpageHeader } from "../components/SubpageHeader";
 
 export class ContactIndexPage extends React.Component<{}, State> {
@@ -16,7 +17,6 @@ export class ContactIndexPage extends React.Component<{}, State> {
                 <SubpageHeader
                     pageTitle={"Contacts"}
                     backUrl={"/"}
-                    toggleMenu={() => { }}
                 />
 
                 <main>
@@ -32,7 +32,7 @@ export class ContactIndexPage extends React.Component<{}, State> {
                             </div>
                             <div className="tool">
                                 <div className="clickable">
-                                    <span className="fas fa-info-circle"></span>
+                                    <Icon info-circle />
                                 </div>
                             </div>
                         </div>

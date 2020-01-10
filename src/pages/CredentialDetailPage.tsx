@@ -31,7 +31,6 @@ export class CredentialDetailPage extends React.Component<Props, State> {
                 <SubpageHeader
                     pageTitle={"Credential"}
                     backUrl={"/"}
-                    toggleMenu={() => { }}
                 />
 
                 <main>
