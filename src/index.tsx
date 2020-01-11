@@ -1,13 +1,18 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from "./App";
-import { MenuProvider } from "./components/MenuProvider";
+import { I18nCtxProvider } from "./components/I18nContext";
+import { MenuCtxProvider } from "./components/MenuCtx";
 import * as serviceWorker from './serviceWorker';
 
+
 const root = (
-    <MenuProvider>
-        <App />
-    </MenuProvider>
+    <MenuCtxProvider>
+        <I18nCtxProvider>
+            <App />
+        </I18nCtxProvider>
+    </MenuCtxProvider>
 );
 
 ReactDOM.render(root, document.getElementById('root'));

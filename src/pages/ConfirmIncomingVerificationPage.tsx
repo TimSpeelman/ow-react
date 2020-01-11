@@ -5,12 +5,8 @@ import { SubpageHeader } from "../components/SubpageHeader";
 export class ConfirmIncomingVerificationPage extends React.Component<{}, State> {
 
     render() {
-        const providers: any = [];
         const request: any = { provider: { title: {}, description: {} } };
-        const attribute: any = { title: {}, provider_title: {} };
-        const lang = "";
         const loading = false;
-        const peopleCount = 23;
 
         return (
             <div className="subpage nav-compact">

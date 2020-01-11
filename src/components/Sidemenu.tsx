@@ -1,16 +1,16 @@
 import classNames from "classnames";
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
 import { fallbackBool } from "../util/fallbackBool";
-import { MenuContext } from "../util/MenuContext";
 import { Icon } from "./Icon";
+import { MenuContext } from "./MenuCtx";
 
 
-export const Sidemenu: React.FC = () => (
-    <MenuContext.Consumer>
-        {({ open, setOpen }) => <SidemenuNo toggleMenu={(v) => setOpen(fallbackBool(v, open))} isOpen={open} />}
-    </MenuContext.Consumer>
-)
+export const Sidemenu: React.FC = () => {
+    const { open, setOpen } = useContext(MenuContext);
+
+    return <SidemenuNo toggleMenu={(v) => setOpen(fallbackBool(v, open))} isOpen={open} />
+}
 
 export const SidemenuNo: React.FC<Props> = ({ toggleMenu, isOpen }: Props) => (
     <div className={classNames({ "side-menu-open": isOpen })}>
@@ -24,27 +24,23 @@ export const SidemenuNo: React.FC<Props> = ({ toggleMenu, isOpen }: Props) => (
             <ul>
                 <li>
                     <Link to="/attestations" onClick={() => toggleMenu(false)}>
-                        <Icon id-card />
-                        <span>Credentials</span>
+                        <Icon id-card /><span>Credentials</span>
                     </Link>
                 </li>
                 <li>
                     <Link to="/contacts" onClick={() => toggleMenu(false)}>
-                        <Icon users />
-                        <span>Contacts</span>
+                        <Icon users /><span>Contacts</span>
                     </Link>
                 </li>
                 <li>
-                    <a className="disabled">
-                        <Icon info-circle />
-                        <span>About</span>
-                    </a>
+                    <Link to="/" onClick={() => toggleMenu(false)} className="disabled">
+                        <Icon info-circle /><span>About</span>
+                    </Link>
                 </li>
                 <li>
-                    <a className="disabled">
-                        <Icon cog />
-                        <span>Settings</span>
-                    </a>
+                    <Link to="/" onClick={() => toggleMenu(false)} className="disabled">
+                        <Icon cog /><span>Settings</span>
+                    </Link>
                 </li>
             </ul>
         </div>

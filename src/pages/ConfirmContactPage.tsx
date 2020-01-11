@@ -20,7 +20,7 @@ export class ConfirmContactPage extends React.Component<{}, State> {
                 <main>
                     <p>Do you trust the following organization?</p>
 
-                    <img src="{ request.provider.logo_url }" style={{ width: "20% " }} />
+                    <img src="{ request.provider.logo_url }" style={{ width: "20% " }} alt="" />
                     <h1>{request.provider.title[lang]}</h1>
                     <p>{request.provider.description[lang]}</p>
                     <table>

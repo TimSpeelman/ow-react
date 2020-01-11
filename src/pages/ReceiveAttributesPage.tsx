@@ -6,7 +6,6 @@ export class ReceiveAttributesPage extends React.Component<{}, State> {
 
     render() {
         const provider: any = { title: {} };
-        const attribute: any = { title: {} };
         const lang = "";
 
         const loading = false;

@@ -6,7 +6,7 @@ export const CredentialCard: React.FC<Props> = (p) => (
     <div className="card-item clickable">
         <div className="row">
             <div className="logo-box">
-                <img style={{ width: "80%" }} src={p.imageUrl} />
+                <img style={{ width: "80%" }} src={p.imageUrl} alt="" />
             </div>
             <div className="text-box">
                 <div className="primary">{p.title}</div>
@@ -15,6 +15,7 @@ export const CredentialCard: React.FC<Props> = (p) => (
             <div className="tool">
             </div>
         </div>
+
         {!p.showDetails ? "" : (
             <div className="credential-details">
                 <div className="row">
@@ -38,12 +39,14 @@ export const CredentialCard: React.FC<Props> = (p) => (
 
             <div className="credential-meta">
                 <table>
-                    {(p.metadata || []).map(e => (
-                        <tr>
-                            <td>{e.key}</td>
-                            <td>{e.value}</td>
-                        </tr>
-                    ))}
+                    <tbody>
+                        {(p.metadata || []).map(e => (
+                            <tr key={e.key.toString()}>
+                                <td>{e.key}</td>
+                                <td>{e.value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
                 </table>
             </div>
         )}

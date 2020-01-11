@@ -7,7 +7,6 @@ export class ContactIndexPage extends React.Component<{}, State> {
     render() {
         const providers: any = [];
         const provider: any = { title: {} };
-        const attribute: any = { title: {} };
         const lang = "";
         const loading = false;
         const peopleCount = 23;
@@ -22,10 +21,10 @@ export class ContactIndexPage extends React.Component<{}, State> {
                 <main>
                     <h1>People ({peopleCount})</h1>
                     <h1>Organisations ({providers.length})</h1>
-                    <a className="card-item clickable" >
+                    <div className="card-item clickable">
                         <div className="row">
                             <div className="logo-box">
-                                <img src="{{ provider.logo_url }}" />
+                                <img src="{{ provider.logo_url }}" alt="" />
                             </div>
                             <div className="text-box">
                                 <div className="primary">{provider.title[lang]}</div>
@@ -36,7 +35,7 @@ export class ContactIndexPage extends React.Component<{}, State> {
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                     <h1>Add By URL</h1>
                     <div className="col-xs-12">
                         <input type="url" className="text-input" placeholder="Enter the URL of the provider" required />

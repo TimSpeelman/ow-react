@@ -6,7 +6,6 @@ export class ShareRequestPage extends React.Component<{}, State> {
 
     render() {
         const provider: any = { title: {} };
-        const attribute: any = { title: {}, provider_title: {} };
         const lang = "";
         const loading = false;
         return (

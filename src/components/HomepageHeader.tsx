@@ -1,14 +1,14 @@
 
-import React from "react";
-import { MenuContext } from "../util/MenuContext";
+import React, { useContext } from "react";
 import { Icon } from "./Icon";
+import { MenuContext } from "./MenuCtx";
 
 
-export const HomepageHeader: React.FC<Omit<Props, "openMenu">> = (p) => (
-    <MenuContext.Consumer>
-        {({ open, setOpen }) => <HomepageHeaderNo openMenu={() => setOpen(true)} {...p} />}
-    </MenuContext.Consumer>
-)
+export const HomepageHeader: React.FC<Omit<Props, "openMenu">> = (p) => {
+    const { setOpen } = useContext(MenuContext);
+
+    return <HomepageHeaderNo openMenu={() => setOpen(true)} {...p} />
+}
 
 export const HomepageHeaderNo: React.FC<Props> = (p: Props) => (
     <div>

@@ -1,49 +1,92 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { BottomTools } from "../components/BottomTools";
 import { CredentialCard } from "../components/CredentialCard";
 import { HomepageHeader } from "../components/HomepageHeader";
-import dummy from "../dummy.json";
-import { StateWrapper } from "../util/StateWrapper";
+import { attributeQuery } from "../services";
+import { LocalAttr } from "../types/types";
 
-const attr = {};
+export const CredentialIndexPage: React.FC = () => {
 
-export class CredentialIndexPage extends React.Component<{}, State> {
+    const [attributes, setAtt] = useState<LocalAttr[]>([]);
 
-    state = {
-        credentials: dummy.attributes
-    }
+    useEffect(() => {
+        attributeQuery.listAttributes().then((a) => setAtt(a))
+            .catch(e => console.error(e))
+    }, []);
 
-    render() {
-        const lang = "nl_NL";
-        const { credentials } = this.state;
-        const sw = new StateWrapper(dummy);
+    const lang = "nl_NL";
 
-        return (
-            <div>
-                <HomepageHeader />
+    console.log("Render");
 
-                <main>
-                    <h1>Credentials</h1>
-                    {credentials.map(c =>
-                        <Link to={`/detail/${encodeURIComponent(c.hash)}`}>
-                            <CredentialCard
-                                imageUrl={""}
-                                title={c.title[lang]}
-                                issuerName={c.provider_title[lang]}
-                            />
-                        </Link>
-                    )}
-                </main>
+    return (
+        <div>
+            <HomepageHeader />
 
-                <BottomTools showQR={true} showPlus={true} />
+            <main>
+                <h1>Credentials</h1>
+                {attributes.map(c =>
+                    <Link to={`/detail/${encodeURIComponent(c.hash)}`} key={c.hash}>
+                        <CredentialCard
+                            imageUrl={c.provider.logo_url}
+                            title={c.title[lang]}
+                            issuerName={c.provider.title[lang]}
+                        />
+                    </Link>
+                )}
+            </main>
 
-            </div>
-        )
+            <BottomTools showQR={true} showPlus={true} />
 
-    }
+        </div>
+    )
 }
 
+
+// export class CredentialIndexPage extends React.Component<{}, State> {
+
+//     state: State = {
+//         attributes: []
+//     }
+
+//     componentDidMount() {
+//         this.loadAttributes();
+//     }
+
+//     async loadAttributes() {
+//         const attributes = await attributeQuery.listAttributes();
+//         this.setState({ attributes });
+//     }
+
+//     render() {
+//         const lang = "nl_NL";
+//         const { attributes } = this.state;
+
+//         return (
+//             <div>
+//                 <HomepageHeader />
+
+//                 <main>
+//                     <h1>Credentials</h1>
+//                     {attributes.map(c =>
+//                         <Link to={`/detail/${encodeURIComponent(c.hash)}`} key={c.hash}>
+//                             <CredentialCard
+//                                 imageUrl={c.provider.logo_url}
+//                                 title={c.title[lang]}
+//                                 issuerName={c.provider.title[lang]}
+//                             />
+//                         </Link>
+//                     )}
+//                 </main>
+
+//                 <BottomTools showQR={true} showPlus={true} />
+
+//             </div>
+//         )
+
+//     }
+// }
+
 interface State {
-    credentials: any[];
+    attributes: LocalAttr[];
 }

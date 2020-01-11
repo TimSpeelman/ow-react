@@ -4,12 +4,9 @@ import { SubpageHeader } from "../components/SubpageHeader";
 export class ContactDetailPage extends React.Component<{}, State> {
 
     render() {
-        const providers: any = [];
         const provider: any = { title: {}, description: {} };
         const procedure: any = { title: {} };
         const lang = "";
-        const loading = false;
-        const peopleCount = 23;
 
         return (
 
@@ -20,7 +17,7 @@ export class ContactDetailPage extends React.Component<{}, State> {
                 />
 
                 <main>
-                    <img src="{ provider.logo_url }" />
+                    <img src="{ provider.logo_url }" alt={provider.title[lang]} />
                     <h1>{provider.title[lang]}</h1>
                     <p>{provider.description[lang]}</p>
                     <table>
@@ -44,7 +41,7 @@ export class ContactDetailPage extends React.Component<{}, State> {
                     <div className="card-item">
                         <div className="row">
                             <div className="logo-box">
-                                <img src="{ provider.logo_url }" />
+                                <img src="{ provider.logo_url }" alt="" />
                             </div>
                             <div className="text-box">
                                 <div className="primary">{procedure.title[lang]}</div>

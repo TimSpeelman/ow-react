@@ -1,63 +1,62 @@
 
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BottomTools } from "../components/BottomTools";
 import { CredentialCard } from "../components/CredentialCard";
+import { I18nContext } from "../components/I18nContext";
 import { SubpageHeader } from "../components/SubpageHeader";
-import dummy from "../dummy.json";
+import { attributeQuery } from "../services";
+import { LocalAttr } from "../types/types";
 
-export class CredentialDetailPage extends React.Component<Props, State> {
+export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
 
-    state: State = {
-    }
 
-    showQR() {
-        // showQR();scrollDelayed(target, 500)
-    }
+    const [attributes, setAtt] = useState<LocalAttr[]>([]);
 
-    render() {
-        const { id } = this.props;
-        const attr = dummy.attributes.find(a => a.hash === id);
-        const lang = "nl_NL";
-        const qrValue = JSON.stringify(
-            {
-                mid: "FIXME",
-                attribute_hash: attr ? attr.hash : "",
-                attribute_value: attr ? attr.value : "",
-            }
-        );
-        return (
-            <div className="subpage nav-compact main-over-nav">
+    const { langCode } = useContext(I18nContext);
 
-                <SubpageHeader
-                    pageTitle={"Credential"}
-                    backUrl={"/"}
-                />
+    useEffect(() => {
+        attributeQuery.listAttributes().then((a) => setAtt(a))
+            .catch(e => console.error(e))
+    }, []);
 
-                <main>
-                    {!attr ? "Credential Unknown.." : (
-                        <CredentialCard
-                            title={attr.title[lang]}
-                            issuerName={attr.provider_title[lang]}
-                            imageUrl={""}
-                            showQR
-                            qrValue={qrValue}
-                            value={attr.value} showDetails={true} showMeta={true}
-                            metadata={[
-                                { key: "Signed by", value: attr.provider_title[lang] },
-                                { key: "Created at", value: `${attr.time}` },
-                                { key: "Valid until", value: "2020-09-01 13:20:00 CET" },
-                            ]} />
-                    )}
-                </main>
 
-                <BottomTools showQR />
+    const attr = attributes.find(a => a.hash === id);
+    const qrValue = JSON.stringify(
+        {
+            mid: "FIXME",
+            attribute_hash: attr ? attr.hash : "",
+            attribute_value: attr ? attr.value : "",
+        }
+    );
+    return (
+        <div className="subpage nav-compact main-over-nav">
 
-            </div>
-        );
-    }
-}
+            <SubpageHeader
+                pageTitle={"Credential"}
+                backUrl={"/"}
+            />
 
-interface State {
+            <main>
+                {!attr ? "Credential Unknown.." : (
+                    <CredentialCard
+                        title={attr.title[langCode]}
+                        issuerName={attr.provider.title[langCode]}
+                        imageUrl={""}
+                        showQR
+                        qrValue={qrValue}
+                        value={attr.value} showDetails={true} showMeta={true}
+                        metadata={[
+                            { key: "Signed by", value: attr.provider.title[langCode] },
+                            { key: "Created at", value: `${attr.time}` },
+                            { key: "Valid until", value: "2020-09-01 13:20:00 CET" },
+                        ]} />
+                )}
+            </main>
+
+            <BottomTools showQR />
+
+        </div>
+    );
 }
 
 interface Props {

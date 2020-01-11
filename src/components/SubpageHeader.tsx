@@ -1,15 +1,15 @@
 
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { MenuContext } from "../util/MenuContext";
 import { Icon } from "./Icon";
+import { MenuContext } from "./MenuCtx";
 
 
-export const SubpageHeader: React.FC<Omit<Props, "openMenu">> = (p) => (
-    <MenuContext.Consumer>
-        {({ open, setOpen }) => <SubpageHeaderNo openMenu={() => setOpen(true)} {...p} />}
-    </MenuContext.Consumer>
-)
+export const SubpageHeader: React.FC<Omit<Props, "openMenu">> = (p) => {
+    const { setOpen } = useContext(MenuContext);
+
+    return <SubpageHeaderNo openMenu={() => setOpen(true)} {...p} />
+}
 
 export const SubpageHeaderNo: React.FC<Props> = (p: Props) => (
     <div>
