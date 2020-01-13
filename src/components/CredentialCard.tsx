@@ -1,5 +1,6 @@
 import QRCode from "qrcode.react";
 import React, { ReactElement } from 'react';
+import CopyToClipboard from "react-copy-to-clipboard";
 import { Icon } from "./Icon";
 
 export const CredentialCard: React.FC<Props> = (p) => (
@@ -39,7 +40,9 @@ export const CredentialCard: React.FC<Props> = (p) => (
         {!p.withQRs || !p.qrValue ? "" : (
 
             <div className="qr-code">
-                <QRCode value={p.qrValue} size={256} level={"M"} />
+                <CopyToClipboard text={p.qrValue}>
+                    <QRCode value={p.qrValue} size={256} level={"M"} />
+                </CopyToClipboard>
             </div>
 
         )}

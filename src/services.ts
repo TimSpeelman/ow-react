@@ -38,10 +38,10 @@ export type PeerCallback = (memberId: string) => any;
 window.peercalls = (memberId: string, refId: string) => {
     const handle = callbackService.resolveReference({ id: refId });
     if (handle) {
-        console.log("Peer called. Handle found!");
+        console.log(`Peer '${memberId}' called. Handle found!`);
         handle.value(memberId);
     } else {
-        console.log("Peer called. Could not find handle..");
+        console.log(`Peer '${memberId}' called. Could not find handle..`);
     }
 }
 
