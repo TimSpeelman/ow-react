@@ -29,7 +29,7 @@ export const App: React.FC = () => {
                     <Route path="/contacts"><ContactIndexPage /></Route>
                     <Route path="/confirm-contact"><ConfirmContactPage /></Route>
                     <Route path="/confirm-verify"><ConfirmIncomingVerificationPage /></Route>
-                    <Route path="/qr"><QrReaderPage /></Route>
+                    <Route path="/qr"><QrReaderPage onScanQR={(qr: string) => alert("You've scanned: " + qr)} /></Route>
                     <Route path="/"><CredentialIndexPage /></Route>
                 </Switch>
             </div>
