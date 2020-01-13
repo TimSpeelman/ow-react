@@ -9,11 +9,6 @@ import { useSelector } from "../hooks/useSelector";
 import { localAPI } from "../services";
 import { getAttributeByHash } from "../services/local/selectors";
 
-let ctr = 0;
-let m1: any = null;
-let m2: any = null;
-let m3: any = null;
-
 export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
 
     const { fromLanguageDict } = useInternationalization();

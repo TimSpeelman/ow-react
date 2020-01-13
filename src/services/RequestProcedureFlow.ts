@@ -1,0 +1,143 @@
+import { ServerDescriptor } from "@tsow/ow-attest";
+import { OpenWalletService } from "../shared/openwallet.service";
+import { AttributeReceiveRequest, AttributeShareRequest } from "../shared/tasks.service";
+import { Hook } from "../shared/util/Hook";
+import { AttributesService } from "./AttributeService";
+import { ProviderService } from "./ProviderService";
+
+export enum Step { INIT, SHARE, RECEIVE };
+export enum Status { PENDING, COMPLETE, ABORTED, FAILED };
+
+export class RequestProcedureFlow {
+    public step: Step = Step.INIT;
+    public status: Status = Status.PENDING;
+    public hookStep: Hook<Step> = new Hook();
+    public hookUserConsentToReceive: Hook<boolean> = new Hook();
+
+    private providerKey?: string;
+    private procedureKey?: string;
+
+    constructor(
+        private providersService: ProviderService,
+        private walletService: OpenWalletService,
+        private attributeService: AttributesService,
+    ) { }
+
+    get provider(): ServerDescriptor | null {
+        return this.providerKey ? this.providersService.providers[this.providerKey] : null;
+    }
+
+    get procedure() {
+        return this.provider && this.procedureKey &&
+            this.provider.procedures[this.procedureKey];
+    }
+
+    get requirements() {
+        return this.procedure && this.procedure.requirements;
+    }
+
+    get shareRequest(): AttributeShareRequest | null {
+        if (!this.requirements) return null;
+        return {
+            attributeNames: this.requirements,
+            done: () => { },
+            id: "",
+            reason: "Some reason",
+            receiver: this.provider!.mid_b64,
+        }
+    }
+
+    public receiveRequest: AttributeReceiveRequest | null = null;
+
+    userStartsRequest(providerKey: string, procedureKey: string) {
+        this.providerKey = providerKey;
+        this.procedureKey = procedureKey;
+        if (this.requirements && this.requirements.length === 0) {
+            this.executeProcedure();
+        } else {
+            this.askUserToShare();
+        }
+    }
+
+    userConsentsToShare(consent: boolean) {
+        if (consent) {
+            this.executeProcedure();
+        } else {
+            this.abortProcedure();
+        }
+    }
+
+    userConsentsToReceive(consent: boolean) {
+        this.hookUserConsentToReceive.fire(consent);
+
+        if (consent) {
+            this.saveReceivedCredentials();
+        } else {
+            this.abortProcedure();
+        }
+    }
+
+    protected askUserToShare() {
+        this.setStep(Step.SHARE);
+    }
+
+    protected async executeProcedure() {
+        const { providerKey, procedureKey } = this;
+        if (!providerKey || !procedureKey) return;
+
+        // We pass a callback to the WalletService for asking consent to receive
+        const onConsent = (data: any) => {
+            this.askUserToReceive(data);
+            return new Promise<boolean>((resolve) => this.hookUserConsentToReceive.on(resolve));
+        }
+
+        try {
+            const result = await this.walletService.requestOWAttestSharingApproved(
+                providerKey, procedureKey, onConsent);
+
+
+            if (result) {
+                result.forEach(a => this.attributeService.storeAttribute(a));
+                this.showMessage('The attributes were successfully added to your identity.');
+                return result;
+            } else {
+                this.showMessage('The attributes were not added to your identity.');
+                return [];
+            }
+
+        } catch (e) {
+            this.showMessage("Something went wrong");
+            console.error("Something went wrong", e);
+        }
+    }
+
+    protected askUserToReceive(data: any) {
+        console.log("Asking user", data);
+        this.receiveRequest = {
+            attributes: data,
+            done: () => { },
+            id: "",
+            provider: this.provider?.mid_b64!,
+            reason: "You asked for them"
+        }
+        this.setStep(Step.RECEIVE);
+    }
+
+    protected saveReceivedCredentials() {
+        // Done in executeProcedure
+    }
+
+    protected abortProcedure() {
+        this.status = Status.ABORTED;
+    }
+
+    protected showMessage(msg: string) {
+        alert(msg);
+    }
+
+    protected setStep(step: Step) {
+        this.step = step;
+        this.hookStep.fire(step);
+    }
+
+}

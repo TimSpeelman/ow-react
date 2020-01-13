@@ -1,0 +1,30 @@
+import React, { useEffect, useState } from 'react';
+import { CredentialCreatePage } from "../pages/CredentialCreatePage";
+import { ReceiveAttributesPage } from "../pages/ReceiveAttributesPage";
+import { ShareRequestPage } from "../pages/ShareRequestPage";
+import { attributeService, owService, providersService } from "../services";
+import { RequestProcedureFlow } from "../services/RequestProcedureFlow";
+
+enum Step { INIT, SHARE, RECEIVE };
+
+let flow: RequestProcedureFlow;
+export const CredentialCreateFlow: React.FC = () => {
+
+    const [step, setStep] = useState<Step>(Step.INIT);
+
+    useEffect(() => {
+        setTimeout(() => {
+            flow = new RequestProcedureFlow(providersService!, owService!, attributeService);
+            flow.hookStep.on(step => { console.log(step); setStep(step) });
+
+        }, 2000);
+    }, [])
+
+    switch (step) {
+        case Step.INIT: return <CredentialCreatePage onSubmitRequest={(pv, pc) => flow.userStartsRequest(pv, pc)} />;
+        case Step.SHARE: return <ShareRequestPage shareRequest={flow.shareRequest!} onSubmitConsent={(consent) => flow.userConsentsToShare(consent)} />
+        case Step.RECEIVE: return <ReceiveAttributesPage receiveRequest={flow.receiveRequest!} onSubmitConsent={(consent) => flow.userConsentsToReceive(consent)} />
+        default: return <div>This should not happen</div>;
+    }
+}
+

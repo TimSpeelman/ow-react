@@ -1,54 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from "../components/Button";
 import { CredentialCard } from "../components/CredentialCard";
 import { SubpageHeader } from "../components/SubpageHeader";
+import { useInternationalization } from "../hooks/useInternationalization";
+import { useSelector } from "../hooks/useSelector";
+import { getProviderByMid } from "../services/local/selectors";
+import { AttributeReceiveRequest } from "../shared/tasks.service";
 
-export class ReceiveAttributesPage extends React.Component<{}, State> {
+export const ReceiveAttributesPage: React.FC<Props> = ({ receiveRequest, onSubmitConsent }) => {
+    const { fromLanguageDict } = useInternationalization();
 
-    render() {
-        const provider: any = { title: {} };
-        const lang = "";
+    const provider = useSelector(getProviderByMid(receiveRequest.provider));
 
-        const loading = false;
-        return (
-            <div className="subpage nav-compact">
+    const [pending, setPending] = useState(false);
 
-                <SubpageHeader
-                    pageTitle={"Receive Credentials"}
-                    backUrl={"/"}
-                />
+    const attributesToReceive = receiveRequest.attributes;
 
-                <main className="text-center" >
-                    <h1>Step 2: Save New Credentials</h1>
-                    <p>{provider.title[lang]} offers you the following credentials:</p>
 
+    const handleSubmit = (consent: boolean) => {
+        setPending(true);
+        onSubmitConsent(consent);
+    }
+
+    return !receiveRequest ? <div>...ReceiveAttributesPage...</div> : (
+        <div className="subpage nav-compact">
+
+            <SubpageHeader
+                pageTitle={"Receive Credentials"}
+                backUrl={"/"}
+            />
+
+            <main className="text-center" >
+                <h1>Step 2: Save New Credentials</h1>
+                <p>{fromLanguageDict(provider!.title)} offers you the following credentials:</p>
+
+                {attributesToReceive.map(attribute => (
                     <CredentialCard
-                        title={"Age"}
-                        issuerName={"Staat der Nederlanden"}
-                        imageUrl={""}
-                        value={"28"}
+                        title={fromLanguageDict(attribute.title)}
+                        issuerName={fromLanguageDict(provider!.title)}
+                        imageUrl={provider!.logo_url}
+                        value={attribute.value}
                         showDetails={true}
                         showMeta={true}
                         metadata={[
-                            { key: "Signed by", value: "Kamer van Koophandel" },
+                            { key: "Signed by", value: fromLanguageDict(provider!.title) },
                             { key: "Created at", value: "2018-09-01 13:20:00 CET" },
                             { key: "Valid until", value: "2020-09-01 13:20:00 CET" },
                         ]} />
+                ))}
 
-                    <p>Do you wish to save these credentials?</p>
-                    <button onClick={() => this.confirmRequest()} className="btn primary" disabled={loading}>Save these credentials</button>
-                    <button onClick={() => this.denyRequest()} className="btn secondary" disabled={loading}>Do not save</button>
-                </main>
-            </div>
-        )
-    }
-
-    confirmRequest() {
-
-    }
-
-    denyRequest() {
-
-    }
+                <p>Do you wish to save these credentials?</p>
+                <Button onClick={() => handleSubmit(true)} primary isPending={pending}>Save these credentials</Button>
+                <Button onClick={() => handleSubmit(false)} isPending={pending}>Do not save</Button>
+            </main>
+        </div>
+    )
 }
 
-interface State { }
+interface Props {
+    receiveRequest: AttributeReceiveRequest;
+    onSubmitConsent: (consent: boolean) => any;
+}

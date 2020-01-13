@@ -1,7 +1,7 @@
 import { AttestationClient, ClientProcedure } from '@tsow/ow-attest';
-import 'rxjs/add/operator/map';
 import { LocalState } from "../services/local/LocalState";
 import { ProviderService } from '../services/ProviderService';
+import { Dict } from "../types/Dict";
 import { LocalAttribute } from "../types/State";
 import { AttributeNV } from './tasks.service';
 
@@ -36,7 +36,7 @@ export class OpenWalletService {
     async requestOWAttestSharingApproved(
         providerId: string,
         procedureId: string,
-        onConsentStore: (data: AttributeNV[]) => Promise<boolean>
+        onConsentStore: (data: OfferedAttribute[]) => Promise<boolean>
     ): Promise<LocalAttribute[]> {
 
         const provider = this.providersService.providers[providerId];
@@ -58,7 +58,13 @@ export class OpenWalletService {
         console.log('Initiating Procedure', clientProcedure);
         console.log('With credentials', dataToShare);
 
-        const result = await this.owClient.execute(clientProcedure, dataToShare, onConsentStore);
+        const _consentStore = (atts: AttributeNV[]) => onConsentStore(atts.map((a): OfferedAttribute => ({
+            name: a.attribute_name,
+            value: a.attribute_value,
+            title: (procedure.attributes.find(x => x.name === a.attribute_name) || {}).title || {},
+            signer_mid_b64: provider.mid_b64,
+        })))
+        const result = await this.owClient.execute(clientProcedure, dataToShare, _consentStore);
 
         console.log('Received result', result);
 
@@ -114,4 +120,11 @@ export interface AttestationData {
 
 export interface Mid {
     mid_b64: string;
+}
+
+export interface OfferedAttribute {
+    name: string;
+    value: string;
+    title: Dict<string>;
+    signer_mid_b64: string;
 }

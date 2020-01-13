@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from "../components/Button";
 import { CredentialCard } from "../components/CredentialCard";
 import { SubpageHeader } from "../components/SubpageHeader";
 import { useInternationalization } from "../hooks/useInternationalization";
+import { useSelector } from "../hooks/useSelector";
+import { getAttributes, getProviderByMid } from "../services/local/selectors";
+import { AttributeShareRequest } from "../shared/tasks.service";
 
-export const ShareRequestPage: React.FC<Props> = ({ requestId }) => {
-    const { langCode } = useInternationalization();
+export const ShareRequestPage: React.FC<Props> = ({ shareRequest, onSubmitConsent }) => {
+    const { fromLanguageDict } = useInternationalization();
 
-    const provider: any = { title: {} };
-    const loading = false;
-    const confirmRequest = () => { };
-    const denyRequest = () => { };
-    return (
+    const provider = useSelector(getProviderByMid(shareRequest.receiver));
+    const allAttributes = useSelector(getAttributes);
+    const attributesToShare = shareRequest.attributeNames.map(name => allAttributes.find(a => a.name === name)).filter(a => !!a);
+
+
+    const [pending, setPending] = useState(false);
+
+    const handleSubmit = (consent: boolean) => {
+        setPending(true);
+        onSubmitConsent(consent);
+    }
+
+    return !provider ? <div>...ShareRequestPage No Provider...</div> : (
         <div className="subpage nav-compact">
             <SubpageHeader
                 pageTitle={"Request Credential"}
@@ -19,19 +31,21 @@ export const ShareRequestPage: React.FC<Props> = ({ requestId }) => {
 
             <main className="text-center">
                 <h1>Step 1: Share Information</h1>
-                <p>{provider.title[langCode]} requires the following information:</p>
+                <p>{fromLanguageDict(provider.title)} requires the following information:</p>
 
-                <CredentialCard
-                    title={"Age"}
-                    issuerName={"Staat der Nederlanden"}
-                    imageUrl={""}
-                    value={"28"}
-                    showDetails={true}
-                />
+                {attributesToShare.map(attribute => !attribute ? "" :
+                    <CredentialCard
+                        title={fromLanguageDict(attribute.title)}
+                        issuerName={fromLanguageDict(attribute.provider.title)}
+                        imageUrl={attribute.provider.logo_url}
+                        value={attribute.value}
+                    />
+                )}
+
 
                 <p>Do you wish to share these credentials?</p>
-                <button onClick={() => confirmRequest()} className="btn primary" disabled={loading}>Share these credentials</button>
-                <button onClick={() => denyRequest()} className="btn secondary" disabled={loading}>Do not share</button>
+                <Button onClick={() => handleSubmit(true)} isPending={pending} primary >Share these credentials</Button>
+                <Button onClick={() => handleSubmit(false)} isPending={pending} >Do not share</Button>
             </main>
 
         </div>
@@ -39,5 +53,6 @@ export const ShareRequestPage: React.FC<Props> = ({ requestId }) => {
 }
 
 interface Props {
-    requestId: string
+    shareRequest: AttributeShareRequest,
+    onSubmitConsent: (consent: boolean) => any
 }

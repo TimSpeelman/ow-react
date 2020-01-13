@@ -2,7 +2,7 @@ import { ServerDescriptor } from '@tsow/ow-attest';
 import { AttributesService } from "../services/AttributeService";
 import { ProviderService } from '../services/ProviderService';
 import { LocalAttribute } from "../types/State";
-import { OpenWalletService } from './openwallet.service';
+import { OfferedAttribute, OpenWalletService } from './openwallet.service';
 import { Dict } from './types/Dict';
 
 let i = 0;
@@ -46,7 +46,7 @@ export interface AttributeNV {
 export interface AttributeReceiveRequest {
     id: string;
     provider: string;
-    attributes: AttributeDetailed[];
+    attributes: OfferedAttribute[];
     reason: string;
     done: (consent: boolean) => void;
 }
@@ -179,12 +179,13 @@ export class TasksService {
      * Returns when the user has OKed.
      */
     askAttributeOfferConsent(
-        provider: string,
+        providerKey: string,
         procedureKey: string,
         attributes: AttributeNV[],
         reason: string,
     ): Promise<boolean> {
-        const procedure = this.providersService.providers[provider].procedures[procedureKey];
+        const provider = this.providersService.providers[providerKey];
+        const procedure = this.providersService.providers[providerKey].procedures[procedureKey];
         const { receiveRequests, navigateTo } = this;
         return new Promise(resolve => {
             // Create a new AttribShareReq
@@ -194,8 +195,9 @@ export class TasksService {
                     name: a.attribute_name,
                     value: a.attribute_value,
                     title: procedure.attributes.find(att => a.attribute_name === att.name)!.title,
+                    signer_mid_b64: provider.mid_b64,
                 })),
-                provider,
+                provider: providerKey,
                 reason,
                 done: resolve,
             });

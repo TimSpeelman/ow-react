@@ -7,7 +7,7 @@ import { useInternationalization } from "../hooks/useInternationalization";
 import { useLocalState } from "../hooks/useLocalState";
 import { Dict } from "../types/Dict";
 
-export const CredentialCreatePage: React.FC = () => {
+export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
 
     const { langCode } = useInternationalization();
     const { state } = useLocalState();
@@ -22,6 +22,11 @@ export const CredentialCreatePage: React.FC = () => {
 
     const providers = useMemo(() => formatProviders(state.providers, langCode), [state.providers, langCode]);
     const procedures = useMemo(() => formatProcedures(state.providers, provider, langCode), [state.providers, provider, langCode]);
+
+    const handleSubmit = () => {
+        setPending(true);
+        onSubmitRequest(provider, procedure);
+    }
 
     return (
         <div className="subpage nav-compact">
@@ -54,7 +59,7 @@ export const CredentialCreatePage: React.FC = () => {
 
                 {provOnline === false ? <p>This provider seems to be offline..</p> : ""}
 
-                <Button onClick={() => setPending(true)} isPending={pending} disabled={!provOnline || !provider || !procedure}>
+                <Button onClick={handleSubmit} isPending={pending} disabled={!provOnline || !provider || !procedure}>
                     Request Attribute</Button>
             </main>
         </div>
@@ -83,12 +88,6 @@ function formatProcedures(providers: Dict<ServerDescriptor>, provId: string, lan
         })).sort((a, b) => a.label > b.label ? -1 : 1);
 }
 
-interface ProviderItem {
-    id: string;
-    title: string;
-}
-
-interface OptionItem {
-    id: string;
-    title: string;
+interface Props {
+    onSubmitRequest: (providerId: string, procedureId: string) => any;
 }

@@ -6,6 +6,7 @@ import { LocalAPI } from "./services/local/LocalAPI";
 import { LocalState } from "./services/local/LocalState";
 import { ProviderService } from "./services/ProviderService";
 import { ReferenceService } from "./services/ReferenceService";
+import { OpenWalletService } from "./shared/openwallet.service";
 import { AttributeShareRequest } from "./shared/tasks.service";
 import { Dict } from "./types/Dict";
 
@@ -38,12 +39,16 @@ window.peercalls = (memberId: string, refId: string) => {
 }
 
 export let providersService: ProviderService | null = null;
+export let owService: OpenWalletService | null = null;
 
 localAPI.getMyMID().then(mid => {
+    console.log("TCL: mid", mid)
+
     const config = { ipv8_url: 'http://localhost:8124', mid_b64: mid, };
     const factory = new AttestationClientFactory(config);
     const owClient = factory.create();
     providersService = new ProviderService(localState, owClient);
+    owService = new OpenWalletService(providersService, localState, owClient);
 });
 
 export const reqs: Dict<AttributeShareRequest> = {};
