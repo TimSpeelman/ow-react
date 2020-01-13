@@ -1,7 +1,6 @@
 import { AttestationClientFactory, IPv8API } from "@tsow/ow-attest";
 import axios from "axios";
 import { ServiceList } from "./hooks/useServices";
-import { AttributeQuery } from "./services/AttributeQuery";
 import { AttributesService } from "./services/AttributeService";
 import { LocalAPI } from "./services/local/LocalAPI";
 import { LocalState } from "./services/local/LocalState";
@@ -22,8 +21,6 @@ export const localState = new LocalState(localAPI);
 
 export const ipv8API = new IPv8API(localhostBase);
 export const attributeService = new AttributesService(localState);
-export const attributeQuery = new AttributeQuery(ipv8API, localState);
-
 
 export const callbackService = new ReferenceService<PeerCallback>({ destroyWhenNoReferences: true, millisToExpire: 20000 });
 export type PeerCallback = (memberId: string) => any;
@@ -45,7 +42,7 @@ export let owService: OpenWalletService | null = null;
 export const initServices = () => localAPI.getMyMID().then((mid): ServiceList => {
     console.log("TCL: mid", mid)
 
-    const config = { ipv8_url: 'http://localhost:8124', mid_b64: mid, };
+    const config = { ipv8_url: localhostBase, mid_b64: mid, };
     const factory = new AttestationClientFactory(config);
     const owClient = factory.create();
     providersService = new ProviderService(localState, owClient);
@@ -56,7 +53,6 @@ export const initServices = () => localAPI.getMyMID().then((mid): ServiceList =>
         localState,
         ipv8API,
         attributeService,
-        attributeQuery,
         callbackService,
         providersService,
         owService,

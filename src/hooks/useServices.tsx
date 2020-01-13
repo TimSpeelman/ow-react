@@ -1,7 +1,6 @@
 import { IPv8API } from "@tsow/ow-attest";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { PeerCallback } from "../services";
-import { AttributeQuery } from "../services/AttributeQuery";
 import { AttributesService } from "../services/AttributeService";
 import { LocalAPI } from "../services/local/LocalAPI";
 import { LocalState } from "../services/local/LocalState";
@@ -15,7 +14,6 @@ export interface ServiceList {
     localState: LocalState;
     ipv8API: IPv8API;
     attributeService: AttributesService;
-    attributeQuery: AttributeQuery;
     callbackService: ReferenceService<PeerCallback>;
     providersService: ProviderService;
     owService: OpenWalletService;
