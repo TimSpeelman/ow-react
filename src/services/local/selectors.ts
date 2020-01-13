@@ -1,4 +1,5 @@
 import { ServerDescriptor } from "@tsow/ow-attest";
+import { memoizeUnary } from "../../shared/util/memoizeFn";
 import { IState, LocalAttribute } from "../../types/State";
 
 export function getAttributes(state: IState): Array<LocalAttribute & WithProvider> {
@@ -9,14 +10,16 @@ export function getAttributes(state: IState): Array<LocalAttribute & WithProvide
 }
 
 export function getAttributeByHash(hash: string) {
-    return (state: IState) => getAttributes(state).find(a => a.hash === hash);
+    return memoizeUnary((state: IState) => {
+        return getAttributes(state).find(a => a.hash === hash);
+    }, null);
 }
 
 export function getProviderByMid(mid: string) {
-    return (state: IState) => {
+    return memoizeUnary((state: IState) => {
         const result = Object.values(state.providers).find(p => p.mid_b64 === mid);
         return result;
-    }
+    }, null);
 }
 
 interface WithProvider {

@@ -1,44 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { BottomTools } from "../components/BottomTools";
 import { CredentialCard } from "../components/CredentialCard";
 import { SubpageHeader } from "../components/SubpageHeader";
 import { useInternationalization } from "../hooks/useInternationalization";
 import { usePromised } from "../hooks/usePromised";
+import { useCallbackReference } from "../hooks/useQR";
 import { useSelector } from "../hooks/useSelector";
-import { callbackService, localAPI } from "../services";
+import { localAPI } from "../services";
 import { getAttributeByHash } from "../services/local/selectors";
 
+let ctr = 0;
+let m1: any = null;
+let m2: any = null;
+let m3: any = null;
 
-export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
+export const CredentialDetailPage: React.FC<Props> = (props) => {
 
-    console.log("Render");
+    const id = props.id;
 
     const { fromLanguageDict } = useInternationalization();
-    const attr = useSelector(getAttributeByHash(id));
+    const attr = useSelector(useMemo(() => getAttributeByHash(id), [id]));
     const myMid = usePromised(() => localAPI.getMyMID().catch(e => console.error(e)));
 
+    // The user may pick either the QR from the credential or from the attribute
+    const [selectedQR, setSelectedQR] = useState<string>("");
+    const toggleQR = (name: string) => setSelectedQR(selectedQR === name ? "" : name);
 
-    const [qrDisp, setQRDisp] = useState<string>("");
+    const onPeerScan = (callbackId: string) => console.log("Peer called to verify " + attr?.name, callbackId)
+    const onPeerScanMemoized = useMemo(() => onPeerScan, [myMid, attr, selectedQR]);
+    const referenceForPeer = useCallbackReference(onPeerScanMemoized, { refreshIntervalMillis: 1000 });
 
-    const [qrValue, setQR] = useState<string>("");
-    useEffect(() => {
-        if (myMid && attr && qrDisp) {
-            const handle = callbackService.register((callbackId) => console.log("Peer called to verify " + attr?.name, callbackId));
-            handle.onNewReference((ref) => setQR(myMid + "|" + ref.id));
-            handle.refreshAtInterval(1000);
-            return () => handle.stopRefreshing();
-        } else {
-            setQR("");
-        }
-    }, [myMid, attr, qrDisp]);
-
-    const toggleQR = (name: string) => {
-        if (qrDisp === name) {
-            setQRDisp("");
-        } else {
-            setQRDisp(name)
-        }
-    }
+    const qrValue = (!myMid || !selectedQR) ? "" : myMid + "|" + referenceForPeer;
 
     return (
         <div className="subpage nav-compact main-over-nav">
