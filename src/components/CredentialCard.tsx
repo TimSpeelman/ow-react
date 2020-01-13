@@ -4,7 +4,7 @@ import { Icon } from "./Icon";
 
 export const CredentialCard: React.FC<Props> = (p) => (
 
-    <div className="card-item clickable">
+    <div className="card-item">
         <div className="row">
             <div className="logo-box">
                 <img style={{ width: "80%" }} src={p.imageUrl} alt="" />

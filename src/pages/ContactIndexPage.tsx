@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
-import { Icon } from "../components/Icon";
+import { ContactCard } from "../components/ContactCard";
 import { SubpageHeader } from "../components/SubpageHeader";
 import { useInternationalization } from "../hooks/useInternationalization";
 import { useSelector } from "../hooks/useSelector";
@@ -36,26 +36,18 @@ export const ContactIndexPage: React.FC = () => {
 
             <main>
                 <h1>People ({peopleCount})</h1>
+                <small>No people yet..</small>
+
                 <h1>Organisations ({providers.length})</h1>
                 {providers.map(provider => (
-                    <Link to={`/contacts/${encodeURIComponent(provider.mid_b64)}`}>
-                        <div className="card-item clickable">
-                            <div className="row">
-                                <div className="logo-box">
-                                    <img src={provider.logo_url} alt="" />
-                                </div>
-                                <div className="text-box">
-                                    <div className="primary">{fromLanguageDict(provider.title)}</div>
-                                </div>
-                                <div className="tool">
-                                    <div className="clickable">
-                                        <Icon info-circle />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <Link to={`/contacts/${encodeURIComponent(provider.mid_b64)}`} key={provider.mid_b64}>
+                        <ContactCard
+                            logoUrl={provider.logo_url}
+                            title={fromLanguageDict(provider.title)}
+                        />
                     </Link>
                 ))}
+
                 <h1>Add By URL</h1>
                 <form onSubmit={() => saveContact(contactUrl)}>
                     <div className="col-xs-12">
