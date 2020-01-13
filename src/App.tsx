@@ -4,6 +4,7 @@ import './assets/css/font-awesome.min.css';
 import './assets/css/index.css';
 import { Sidemenu } from "./components/Sidemenu";
 import { CredentialCreateFlow } from "./flows/CredentialCreateFlow";
+import { useServices } from "./hooks/useServices";
 import { ConfirmContactPage } from "./pages/ConfirmContactPage";
 import { ConfirmIncomingVerificationPage } from "./pages/ConfirmIncomingVerificationPage";
 import { ContactDetailPage } from "./pages/ContactDetailPage";
@@ -14,7 +15,9 @@ import { QrReaderPage } from "./pages/QrReaderPage";
 
 export const App: React.FC = () => {
 
-    return (
+    const { ready } = useServices();
+
+    return !ready ? <div>Connecting to services..</div> : (
         <Router>
             <div>
                 <Sidemenu />

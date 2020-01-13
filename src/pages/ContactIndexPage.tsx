@@ -5,12 +5,13 @@ import { ContactCard } from "../components/ContactCard";
 import { SubpageHeader } from "../components/SubpageHeader";
 import { useInternationalization } from "../hooks/useInternationalization";
 import { useSelector } from "../hooks/useSelector";
-import { providersService } from "../services";
+import { useServices } from "../hooks/useServices";
 import { getProviders } from "../services/local/selectors";
 
 export const ContactIndexPage: React.FC = () => {
 
     const { fromLanguageDict } = useInternationalization();
+    const { services } = useServices();
 
     const providers = useSelector(getProviders);
 
@@ -20,7 +21,7 @@ export const ContactIndexPage: React.FC = () => {
     const [pending, setPending] = useState(false);
     const saveContact = (url: string) => {
         setPending(true);
-        providersService?.addByURL(url).then(() => {
+        services!.providersService?.addByURL(url).then(() => {
             setContactUrl("");
         }).catch((e) => {
             alert("Failed to add that provider");

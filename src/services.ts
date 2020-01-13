@@ -1,5 +1,6 @@
 import { AttestationClientFactory, IPv8API } from "@tsow/ow-attest";
 import axios from "axios";
+import { ServiceList } from "./hooks/useServices";
 import { AttributeQuery } from "./services/AttributeQuery";
 import { AttributesService } from "./services/AttributeService";
 import { LocalAPI } from "./services/local/LocalAPI";
@@ -41,7 +42,7 @@ window.peercalls = (memberId: string, refId: string) => {
 export let providersService: ProviderService | null = null;
 export let owService: OpenWalletService | null = null;
 
-localAPI.getMyMID().then(mid => {
+export const initServices = () => localAPI.getMyMID().then((mid): ServiceList => {
     console.log("TCL: mid", mid)
 
     const config = { ipv8_url: 'http://localhost:8124', mid_b64: mid, };
@@ -49,6 +50,17 @@ localAPI.getMyMID().then(mid => {
     const owClient = factory.create();
     providersService = new ProviderService(localState, owClient);
     owService = new OpenWalletService(providersService, localState, owClient);
+
+    return {
+        localAPI,
+        localState,
+        ipv8API,
+        attributeService,
+        attributeQuery,
+        callbackService,
+        providersService,
+        owService,
+    }
 });
 
 export const reqs: Dict<AttributeShareRequest> = {};

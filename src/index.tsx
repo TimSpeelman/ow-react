@@ -4,17 +4,20 @@ import { App } from "./App";
 import { I18nContextProvider } from "./hooks/useInternationalization";
 import { LocalStateContextProvider } from "./hooks/useLocalState";
 import { MenuContextProvider } from "./hooks/useMenu";
-import { localState } from "./services";
+import { ServicesContextProvider } from "./hooks/useServices";
+import { initServices, localState } from "./services";
 import * as serviceWorker from './serviceWorker';
 
 const root = (
-    <MenuContextProvider>
-        <I18nContextProvider fallbackLangs={["en_US", "en_UK"]}>
-            <LocalStateContextProvider localState={localState}>
-                <App />
-            </LocalStateContextProvider>
-        </I18nContextProvider>
-    </MenuContextProvider>
+    <ServicesContextProvider initServices={initServices}>
+        <MenuContextProvider>
+            <I18nContextProvider fallbackLangs={["en_US", "en_UK"]}>
+                <LocalStateContextProvider localState={localState}>
+                    <App />
+                </LocalStateContextProvider>
+            </I18nContextProvider>
+        </MenuContextProvider>
+    </ServicesContextProvider>
 );
 
 ReactDOM.render(root, document.getElementById('root'));

@@ -6,14 +6,15 @@ import { useInternationalization } from "../hooks/useInternationalization";
 import { usePromised } from "../hooks/usePromised";
 import { useCallbackReference } from "../hooks/useQR";
 import { useSelector } from "../hooks/useSelector";
-import { localAPI } from "../services";
+import { useServices } from "../hooks/useServices";
 import { getAttributeByHash } from "../services/local/selectors";
 
 export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
 
+    const { services } = useServices();
     const { fromLanguageDict } = useInternationalization();
     const attr = useSelector(useMemo(() => getAttributeByHash(id), [id]));
-    const myMid = usePromised(() => localAPI.getMyMID().catch(e => console.error(e)));
+    const myMid = usePromised(() => services!.localAPI.getMyMID().catch(e => console.error(e)));
 
     // The user may pick either the QR from the credential or from the attribute
     const [selectedQR, setSelectedQR] = useState<string>("");
