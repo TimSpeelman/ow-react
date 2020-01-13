@@ -52,7 +52,7 @@ export const ReceiveAttributesPage: React.FC<Props> = ({ receiveRequest, onSubmi
 
                 <p>Do you wish to save these credentials?</p>
                 <Button onClick={() => handleSubmit(true)} primary isPending={pending}>Save these credentials</Button>
-                <Button onClick={() => handleSubmit(false)} isPending={pending}>Do not save</Button>
+                <Button onClick={() => handleSubmit(false)} disabled={pending}>Do not save</Button>
             </main>
         </div>
     )

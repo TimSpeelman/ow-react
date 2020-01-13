@@ -39,13 +39,14 @@ export const ShareRequestPage: React.FC<Props> = ({ shareRequest, onSubmitConsen
                         issuerName={fromLanguageDict(attribute.provider.title)}
                         imageUrl={attribute.provider.logo_url}
                         value={attribute.value}
+                        showDetails
                     />
                 )}
 
 
                 <p>Do you wish to share these credentials?</p>
                 <Button onClick={() => handleSubmit(true)} isPending={pending} primary >Share these credentials</Button>
-                <Button onClick={() => handleSubmit(false)} isPending={pending} >Do not share</Button>
+                <Button onClick={() => handleSubmit(false)} disabled={pending} >Do not share</Button>
             </main>
 
         </div>
