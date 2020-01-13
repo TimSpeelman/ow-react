@@ -35,6 +35,7 @@ export const ShareRequestPage: React.FC<Props> = ({ shareRequest, onSubmitConsen
 
                 {attributesToShare.map(attribute => !attribute ? "" :
                     <CredentialCard
+                        key={attribute.hash}
                         title={fromLanguageDict(attribute.title)}
                         issuerName={fromLanguageDict(attribute.provider.title)}
                         imageUrl={attribute.provider.logo_url}
