@@ -36,6 +36,7 @@ export const ReceiveAttributesPage: React.FC<Props> = ({ receiveRequest, onSubmi
 
                 {attributesToReceive.map(attribute => (
                     <CredentialCard
+                        key={attribute.name}
                         title={fromLanguageDict(attribute.title)}
                         issuerName={fromLanguageDict(provider!.title)}
                         imageUrl={provider!.logo_url}

@@ -19,4 +19,5 @@ interface Props {
     children?: string | ReactElement;
     primary?: boolean;
     disabled?: boolean;
+    type?: "button" | "reset" | "submit";
 }

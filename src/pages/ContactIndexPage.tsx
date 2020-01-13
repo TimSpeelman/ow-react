@@ -1,60 +1,74 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from "react-router-dom";
+import { Button } from "../components/Button";
 import { Icon } from "../components/Icon";
 import { SubpageHeader } from "../components/SubpageHeader";
+import { useInternationalization } from "../hooks/useInternationalization";
+import { useSelector } from "../hooks/useSelector";
+import { providersService } from "../services";
+import { getProviders } from "../services/local/selectors";
 
-export class ContactIndexPage extends React.Component<{}, State> {
+export const ContactIndexPage: React.FC = () => {
 
-    render() {
-        const providers: any = [];
-        const provider: any = { title: {} };
-        const lang = "";
-        const loading = false;
-        const peopleCount = 23;
+    const { fromLanguageDict } = useInternationalization();
 
-        return (
-            <div className="subpage nav-compact">
-                <SubpageHeader
-                    pageTitle={"Contacts"}
-                    backUrl={"/"}
-                />
+    const providers = useSelector(getProviders);
 
-                <main>
-                    <h1>People ({peopleCount})</h1>
-                    <h1>Organisations ({providers.length})</h1>
-                    <div className="card-item clickable">
-                        <div className="row">
-                            <div className="logo-box">
-                                <img src="{{ provider.logo_url }}" alt="" />
-                            </div>
-                            <div className="text-box">
-                                <div className="primary">{provider.title[lang]}</div>
-                            </div>
-                            <div className="tool">
-                                <div className="clickable">
-                                    <Icon info-circle />
+    const peopleCount = 0;
+
+    const [contactUrl, setContactUrl] = useState("");
+    const [pending, setPending] = useState(false);
+    const saveContact = (url: string) => {
+        setPending(true);
+        providersService?.addByURL(url).then(() => {
+            setContactUrl("");
+        }).catch((e) => {
+            alert("Failed to add that provider");
+        }).finally(() => setPending(false));
+    }
+
+    return (
+        <div className="subpage nav-compact">
+            <SubpageHeader
+                pageTitle={"Contacts"}
+                backUrl={"/"}
+            />
+
+            <main>
+                <h1>People ({peopleCount})</h1>
+                <h1>Organisations ({providers.length})</h1>
+                {providers.map(provider => (
+                    <Link to={`/contacts/${encodeURIComponent(provider.mid_b64)}`}>
+                        <div className="card-item clickable">
+                            <div className="row">
+                                <div className="logo-box">
+                                    <img src={provider.logo_url} alt="" />
+                                </div>
+                                <div className="text-box">
+                                    <div className="primary">{fromLanguageDict(provider.title)}</div>
+                                </div>
+                                <div className="tool">
+                                    <div className="clickable">
+                                        <Icon info-circle />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <h1>Add By URL</h1>
+                    </Link>
+                ))}
+                <h1>Add By URL</h1>
+                <form onSubmit={() => saveContact(contactUrl)}>
                     <div className="col-xs-12">
-                        <input type="url" className="text-input" placeholder="Enter the URL of the provider" required />
+                        <input type="url" className="text-input" placeholder="Enter the URL of the provider"
+                            required value={contactUrl} onChange={(e) => setContactUrl(e.target.value)} />
                         <br />
                         <br />
-                        <button onClick={() => this.addContact()} className="btn btn primary" type="submit" disabled={loading}>Add Contact</button>
+                        <Button type={"submit"} primary isPending={pending}>Add Contact</Button>
                     </div>
-                </main>
+                </form>
+            </main>
 
-            </div>
-        )
-    }
-
-    addContact() {
-
-    }
-
-}
-
-interface State {
+        </div>
+    )
 
 }

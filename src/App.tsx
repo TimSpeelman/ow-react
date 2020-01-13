@@ -21,8 +21,8 @@ export const App: React.FC = () => {
                 <Switch>
                     <Route path="/create"><CredentialCreateFlow /></Route>
                     <Route path="/detail/:id"><SpecificCredentialDetailPage /></Route>
+                    <Route path="/contacts/:mid"><SpecificContactDetailPage /></Route>
                     <Route path="/contacts"><ContactIndexPage /></Route>
-                    <Route path="/contact"><ContactDetailPage /></Route>
                     <Route path="/confirm-contact"><ConfirmContactPage /></Route>
                     <Route path="/confirm-verify"><ConfirmIncomingVerificationPage /></Route>
                     <Route path="/"><CredentialIndexPage /></Route>
@@ -35,4 +35,9 @@ export const App: React.FC = () => {
 function SpecificCredentialDetailPage() {
     let params: any = useParams();
     return <CredentialDetailPage id={decodeURIComponent(params.id)} />
+}
+
+function SpecificContactDetailPage() {
+    let params: any = useParams();
+    return <ContactDetailPage providerMid={decodeURIComponent(params.mid)} />
 }

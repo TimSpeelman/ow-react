@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { CredentialCreatePage } from "../pages/CredentialCreatePage";
+import { ProcedureDonePage } from "../pages/ProcedureDonePage";
 import { ReceiveAttributesPage } from "../pages/ReceiveAttributesPage";
 import { ShareRequestPage } from "../pages/ShareRequestPage";
 import { attributeService, owService, providersService } from "../services";
-import { RequestProcedureFlow } from "../services/RequestProcedureFlow";
+import { RequestProcedureFlow, Status } from "../services/RequestProcedureFlow";
 
-enum Step { INIT, SHARE, RECEIVE };
+enum Step { INIT, SHARE, RECEIVE, DONE };
 
 let flow: RequestProcedureFlow;
 export const CredentialCreateFlow: React.FC = () => {
@@ -24,6 +25,7 @@ export const CredentialCreateFlow: React.FC = () => {
         case Step.INIT: return <CredentialCreatePage onSubmitRequest={(pv, pc) => flow.userStartsRequest(pv, pc)} />;
         case Step.SHARE: return <ShareRequestPage shareRequest={flow.shareRequest!} onSubmitConsent={(consent) => flow.userConsentsToShare(consent)} />
         case Step.RECEIVE: return <ReceiveAttributesPage receiveRequest={flow.receiveRequest!} onSubmitConsent={(consent) => flow.userConsentsToReceive(consent)} />
+        case Step.DONE: return <ProcedureDonePage messageBody={flow.message} messageTitle={flow.status === Status.COMPLETE ? "Success" : "No success"} pageTitle={"Create"} />
         default: return <div>This should not happen</div>;
     }
 }

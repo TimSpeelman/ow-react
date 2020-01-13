@@ -15,6 +15,10 @@ export function getAttributeByHash(hash: string) {
     }, null);
 }
 
+export function getProviders(state: IState) {
+    return Object.values(state.providers);
+}
+
 export function getProviderByMid(mid: string) {
     return memoizeUnary((state: IState) => {
         const result = Object.values(state.providers).find(p => p.mid_b64 === mid);

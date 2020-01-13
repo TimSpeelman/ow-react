@@ -5,7 +5,7 @@ import { Hook } from "../shared/util/Hook";
 import { AttributesService } from "./AttributeService";
 import { ProviderService } from "./ProviderService";
 
-export enum Step { INIT, SHARE, RECEIVE };
+export enum Step { INIT, SHARE, RECEIVE, DONE };
 export enum Status { PENDING, COMPLETE, ABORTED, FAILED };
 
 export class RequestProcedureFlow {
@@ -13,9 +13,12 @@ export class RequestProcedureFlow {
     public status: Status = Status.PENDING;
     public hookStep: Hook<Step> = new Hook();
     public hookUserConsentToReceive: Hook<boolean> = new Hook();
+    public hookStatus: Hook<Status> = new Hook();
 
     private providerKey?: string;
     private procedureKey?: string;
+
+    public message: string = "";
 
     constructor(
         private providersService: ProviderService,
@@ -99,15 +102,20 @@ export class RequestProcedureFlow {
             if (result) {
                 result.forEach(a => this.attributeService.storeAttribute(a));
                 this.showMessage('The attributes were successfully added to your identity.');
+                this.setStatus(Status.COMPLETE);
+                this.done();
                 return result;
             } else {
                 this.showMessage('The attributes were not added to your identity.');
+                this.setStatus(Status.ABORTED);
+                this.done();
                 return [];
             }
 
         } catch (e) {
             this.showMessage("Something went wrong");
             console.error("Something went wrong", e);
+            this.setStatus(Status.FAILED);
         }
     }
 
@@ -127,17 +135,27 @@ export class RequestProcedureFlow {
         // Done in executeProcedure
     }
 
+    protected done() {
+        this.setStep(Step.DONE);
+    }
+
     protected abortProcedure() {
-        this.status = Status.ABORTED;
+        this.setStatus(Status.ABORTED);
+        this.setStep(Step.DONE);
     }
 
     protected showMessage(msg: string) {
-        alert(msg);
+        this.message = msg;
     }
 
     protected setStep(step: Step) {
         this.step = step;
         this.hookStep.fire(step);
+    }
+
+    protected setStatus(status: Status) {
+        this.status = status;
+        this.hookStatus.fire(status);
     }
 
 }
