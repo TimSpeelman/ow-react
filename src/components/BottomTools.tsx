@@ -5,9 +5,11 @@ import { Icon } from "./Icon";
 export const BottomTools: React.FC<Props> = (p: Props) => (
     <div className="bottom-tools">
         {!p.showQR ? "" :
-            <div className="fab-btn primary bottom-center" style={{ fontSize: "3em" }}>
-                <img src={require("../assets/images/qr-scan.svg")} alt="" style={{ width: "50%" }} />
-            </div>
+            <Link to={"/qr"} >
+                <div className="fab-btn primary bottom-center" style={{ fontSize: "3em" }}>
+                    <img src={require("../assets/images/qr-scan.svg")} alt="" style={{ width: "50%" }} />
+                </div>
+            </Link>
         }
         {!p.showPlus ? "" :
             <Link className="fab-btn secondary bottom-right" style={{ fontSize: "2em" }}
