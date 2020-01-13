@@ -14,9 +14,7 @@ let m1: any = null;
 let m2: any = null;
 let m3: any = null;
 
-export const CredentialDetailPage: React.FC<Props> = (props) => {
-
-    const id = props.id;
+export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
 
     const { fromLanguageDict } = useInternationalization();
     const attr = useSelector(useMemo(() => getAttributeByHash(id), [id]));
@@ -26,6 +24,7 @@ export const CredentialDetailPage: React.FC<Props> = (props) => {
     const [selectedQR, setSelectedQR] = useState<string>("");
     const toggleQR = (name: string) => setSelectedQR(selectedQR === name ? "" : name);
 
+    // Once a peer scans the QR and calls us with the reference, it will invoke the onPeerScan callback.
     const onPeerScan = (callbackId: string) => console.log("Peer called to verify " + attr?.name, callbackId)
     const onPeerScanMemoized = useMemo(() => onPeerScan, [myMid, attr, selectedQR]);
     const referenceForPeer = useCallbackReference(onPeerScanMemoized, { refreshIntervalMillis: 1000 });
