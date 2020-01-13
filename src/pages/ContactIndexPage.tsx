@@ -17,12 +17,13 @@ export const ContactIndexPage: React.FC = () => {
 
     const peopleCount = 0;
 
-    const [contactUrl, setContactUrl] = useState("");
+    const defaultContactUrl = "http://localhost"
+    const [contactUrl, setContactUrl] = useState(defaultContactUrl);
     const [pending, setPending] = useState(false);
     const saveContact = (url: string) => {
         setPending(true);
         services!.providersService?.addByURL(url).then(() => {
-            setContactUrl("");
+            setContactUrl(defaultContactUrl);
         }).catch((e) => {
             alert("Failed to add that provider");
         }).finally(() => setPending(false));

@@ -23,13 +23,14 @@ export interface ServicesContext {
     ready: boolean;
     error: boolean;
     services: ServiceList | null;
+    path: string;
 }
 
 
 // Create a react context with dummy default value
 const Context = createContext<ServicesContext>({} as ServicesContext);
 
-export const ServicesContextProvider: React.FC<Props> = ({ children, initServices }) => {
+export const ServicesContextProvider: React.FC<Props> = ({ children, initServices, path }) => {
     const [services, setContext] = useState<ServiceList | null>(null);
     const [error, setError] = useState<any>(null);
 
@@ -41,6 +42,7 @@ export const ServicesContextProvider: React.FC<Props> = ({ children, initService
         ready: !!services,
         error,
         services,
+        path
     }
 
     return <Context.Provider value={context}>{children}</Context.Provider>
@@ -52,4 +54,5 @@ export const useServices = () => {
 
 interface Props {
     initServices: () => Promise<ServiceList>
+    path: string;
 }

@@ -1,5 +1,6 @@
 import { AttestationClientFactory, IPv8API } from "@tsow/ow-attest";
 import axios from "axios";
+import Cookies from "universal-cookie";
 import { ServiceList } from "./hooks/useServices";
 import { AttributesService } from "./services/AttributeService";
 import { LocalAPI } from "./services/local/LocalAPI";
@@ -10,11 +11,19 @@ import { OpenWalletService } from "./shared/openwallet.service";
 import { AttributeShareRequest } from "./shared/tasks.service";
 import { Dict } from "./types/Dict";
 
-const localhostBase = 'http://localhost:8124';
+const portFromUrl = window.location.hash.match(/port=([0-9]+)/);
+
+const cookie = new Cookies();
+const port = (portFromUrl ? portFromUrl[1] : null) || cookie.get("port") || "8124";
+cookie.set("port", port);
+
+export const localhostBase = `http://localhost:${port}`;
 
 const localhost = axios.create({
     baseURL: localhostBase + '/api',
 });
+
+
 
 export const localAPI = new LocalAPI(localhost);
 export const localState = new LocalState(localAPI);

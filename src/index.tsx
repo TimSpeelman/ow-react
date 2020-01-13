@@ -5,11 +5,11 @@ import { I18nContextProvider } from "./hooks/useInternationalization";
 import { LocalStateContextProvider } from "./hooks/useLocalState";
 import { MenuContextProvider } from "./hooks/useMenu";
 import { ServicesContextProvider } from "./hooks/useServices";
-import { initServices, localState } from "./services";
+import { initServices, localhostBase, localState } from "./services";
 import * as serviceWorker from './serviceWorker';
 
 const root = (
-    <ServicesContextProvider initServices={initServices}>
+    <ServicesContextProvider initServices={initServices} path={localhostBase}>
         <MenuContextProvider>
             <I18nContextProvider fallbackLangs={["en_US", "en_UK"]}>
                 <LocalStateContextProvider localState={localState}>
