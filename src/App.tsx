@@ -15,9 +15,9 @@ import { QrReaderPage } from "./pages/QrReaderPage";
 
 export const App: React.FC = () => {
 
-    const { ready } = useServices();
+    const { ready, error } = useServices();
 
-    return !ready ? <div>Connecting to services..</div> : (
+    return !ready ? (error ? <div>Oops! Is the localhost offline?</div> : <div>Connecting to services..</div>) : (
         <Router>
             <div>
                 <Sidemenu />

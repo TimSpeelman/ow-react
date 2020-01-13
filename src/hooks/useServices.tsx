@@ -23,6 +23,7 @@ export interface ServiceList {
 
 export interface ServicesContext {
     ready: boolean;
+    error: boolean;
     services: ServiceList | null;
 }
 
@@ -32,13 +33,15 @@ const Context = createContext<ServicesContext>({} as ServicesContext);
 
 export const ServicesContextProvider: React.FC<Props> = ({ children, initServices }) => {
     const [services, setContext] = useState<ServiceList | null>(null);
+    const [error, setError] = useState<any>(null);
 
     useEffect(() => {
-        initServices().then(s => setContext(s));
+        initServices().then(s => setContext(s)).catch(setError);
     }, []);
 
     const context = {
         ready: !!services,
+        error,
         services,
     }
 
