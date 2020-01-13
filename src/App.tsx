@@ -10,6 +10,7 @@ import { ContactDetailPage } from "./pages/ContactDetailPage";
 import { ContactIndexPage } from "./pages/ContactIndexPage";
 import { CredentialDetailPage } from "./pages/CredentialDetailPage";
 import { CredentialIndexPage } from "./pages/CredentialIndexPage";
+import { QrReaderPage } from "./pages/QrReaderPage";
 
 export const App: React.FC = () => {
 
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
                     <Route path="/contacts"><ContactIndexPage /></Route>
                     <Route path="/confirm-contact"><ConfirmContactPage /></Route>
                     <Route path="/confirm-verify"><ConfirmIncomingVerificationPage /></Route>
+                    <Route path="/qr"><QrReaderPage /></Route>
                     <Route path="/"><CredentialIndexPage /></Route>
                 </Switch>
             </div>
