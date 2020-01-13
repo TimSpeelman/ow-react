@@ -7,7 +7,7 @@ import { ConfirmContactPage } from "./pages/ConfirmContactPage";
 import { ConfirmIncomingVerificationPage } from "./pages/ConfirmIncomingVerificationPage";
 import { ContactDetailPage } from "./pages/ContactDetailPage";
 import { ContactIndexPage } from "./pages/ContactIndexPage";
-import { CreateCredentialPage } from "./pages/CreateCredentialPage";
+import { CredentialCreatePage } from "./pages/CredentialCreatePage";
 import { CredentialDetailPage } from "./pages/CredentialDetailPage";
 import { CredentialIndexPage } from "./pages/CredentialIndexPage";
 import { ReceiveAttributesPage } from "./pages/ReceiveAttributesPage";
@@ -21,33 +21,15 @@ export const App: React.FC = () => {
                 <Sidemenu />
 
                 <Switch>
-                    <Route path="/create">
-                        <CreateCredentialPage />
-                    </Route>
-                    <Route path="/detail/:id">
-                        <SpecificCredentialDetailPage />
-                    </Route>
-                    <Route path="/receive">
-                        <ReceiveAttributesPage />
-                    </Route>
-                    <Route path="/share">
-                        <ShareRequestPage />
-                    </Route>
-                    <Route path="/contacts">
-                        <ContactIndexPage />
-                    </Route>
-                    <Route path="/contact">
-                        <ContactDetailPage />
-                    </Route>
-                    <Route path="/confirm-contact">
-                        <ConfirmContactPage />
-                    </Route>
-                    <Route path="/confirm-verify">
-                        <ConfirmIncomingVerificationPage />
-                    </Route>
-                    <Route path="/">
-                        <CredentialIndexPage />
-                    </Route>
+                    <Route path="/create"><CredentialCreatePage /></Route>
+                    <Route path="/detail/:id"><SpecificCredentialDetailPage /></Route>
+                    <Route path="/receive"><ReceiveAttributesPage /></Route>
+                    <Route path="/share/:requestId"><SpecificShareRequestPage /></Route>
+                    <Route path="/contacts"><ContactIndexPage /></Route>
+                    <Route path="/contact"><ContactDetailPage /></Route>
+                    <Route path="/confirm-contact"><ConfirmContactPage /></Route>
+                    <Route path="/confirm-verify"><ConfirmIncomingVerificationPage /></Route>
+                    <Route path="/"><CredentialIndexPage /></Route>
                 </Switch>
             </div>
         </Router>
@@ -57,4 +39,9 @@ export const App: React.FC = () => {
 function SpecificCredentialDetailPage() {
     let params: any = useParams();
     return <CredentialDetailPage id={decodeURIComponent(params.id)} />
+}
+
+function SpecificShareRequestPage() {
+    let params: any = useParams();
+    return <ShareRequestPage requestId={decodeURIComponent(params.requestId)} />
 }

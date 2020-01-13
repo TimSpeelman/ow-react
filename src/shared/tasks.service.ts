@@ -1,8 +1,8 @@
 import { ServerDescriptor } from '@tsow/ow-attest';
-import { LocalAttribute } from './AppStateService';
-import { AttestedAttribute, AttributesService } from './attributes.service';
+import { AttributesService } from "../services/AttributeService";
+import { ProviderService } from '../services/ProviderService';
+import { LocalAttribute } from "../types/State";
 import { OpenWalletService } from './openwallet.service';
-import { ProvidersService } from './providers.service';
 import { Dict } from './types/Dict';
 
 let i = 0;
@@ -60,7 +60,7 @@ export interface ContactRequest {
 export interface IncomingVerifyRequest {
     id: string;
     mid: string;
-    attribute: AttestedAttribute;
+    attribute: LocalAttribute;
     done: (consent: boolean) => void;
 }
 
@@ -74,7 +74,7 @@ export class TasksService {
 
     constructor(
         private walletService: OpenWalletService,
-        private providersService: ProvidersService,
+        private providersService: ProviderService,
         private attributesService: AttributesService) { }
 
     showMessage(msg: string) {
@@ -254,7 +254,7 @@ export class TasksService {
 
     async requestAllowVerify(
         mid: string,
-        attribute: AttestedAttribute,
+        attribute: LocalAttribute,
     ) {
         const { inVerifyRequests, navigateTo } = this;
         return new Promise(resolve => {

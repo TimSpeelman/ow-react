@@ -14,4 +14,6 @@ export interface LocalAttribute {
     type: string;
     title: Dict<string>;
     provider_title: Dict<string>;
+    signer_mid_b64: string;
+    metadata: any;
 }

@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
 import { BottomTools } from "../components/BottomTools";
 import { CredentialCard } from "../components/CredentialCard";
 import { HomepageHeader } from "../components/HomepageHeader";
-import { attributeQuery } from "../services";
+import { useInternationalization } from "../hooks/useInternationalization";
+import { useSelector } from "../hooks/useSelector";
+import { getAttributes } from "../services/local/selectors";
 import { LocalAttr } from "../types/types";
 
 export const CredentialIndexPage: React.FC = () => {
 
-    const [attributes, setAtt] = useState<LocalAttr[]>([]);
-
-    useEffect(() => {
-        attributeQuery.listAttributes().then((a) => setAtt(a))
-            .catch(e => console.error(e))
-    }, []);
-
-    const lang = "nl_NL";
-
-    console.log("Render");
+    const attributes = useSelector(getAttributes);
+    const { fromLanguageDict } = useInternationalization();
 
     return (
         <div>
@@ -29,15 +23,14 @@ export const CredentialIndexPage: React.FC = () => {
                     <Link to={`/detail/${encodeURIComponent(c.hash)}`} key={c.hash}>
                         <CredentialCard
                             imageUrl={c.provider.logo_url}
-                            title={c.title[lang]}
-                            issuerName={c.provider.title[lang]}
+                            title={fromLanguageDict(c.title)}
+                            issuerName={fromLanguageDict(c.provider.title)}
                         />
                     </Link>
                 )}
             </main>
 
             <BottomTools showQR={true} showPlus={true} />
-
         </div>
     )
 }

@@ -1,13 +1,13 @@
 import classNames from "classnames";
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
+import { useMenu } from "../hooks/useMenu";
 import { fallbackBool } from "../util/fallbackBool";
 import { Icon } from "./Icon";
-import { MenuContext } from "./MenuCtx";
 
 
 export const Sidemenu: React.FC = () => {
-    const { open, setOpen } = useContext(MenuContext);
+    const { open, setOpen } = useMenu();
 
     return <SidemenuNo toggleMenu={(v) => setOpen(fallbackBool(v, open))} isOpen={open} />
 }

@@ -1,33 +1,45 @@
-
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BottomTools } from "../components/BottomTools";
 import { CredentialCard } from "../components/CredentialCard";
-import { I18nContext } from "../components/I18nContext";
 import { SubpageHeader } from "../components/SubpageHeader";
-import { attributeQuery } from "../services";
-import { LocalAttr } from "../types/types";
+import { useInternationalization } from "../hooks/useInternationalization";
+import { usePromised } from "../hooks/usePromised";
+import { useSelector } from "../hooks/useSelector";
+import { callbackService, localAPI } from "../services";
+import { getAttributeByHash } from "../services/local/selectors";
+
 
 export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
 
+    console.log("Render");
 
-    const [attributes, setAtt] = useState<LocalAttr[]>([]);
+    const { fromLanguageDict } = useInternationalization();
+    const attr = useSelector(getAttributeByHash(id));
+    const myMid = usePromised(() => localAPI.getMyMID().catch(e => console.error(e)));
 
-    const { langCode } = useContext(I18nContext);
 
+    const [qrDisp, setQRDisp] = useState<string>("");
+
+    const [qrValue, setQR] = useState<string>("");
     useEffect(() => {
-        attributeQuery.listAttributes().then((a) => setAtt(a))
-            .catch(e => console.error(e))
-    }, []);
-
-
-    const attr = attributes.find(a => a.hash === id);
-    const qrValue = JSON.stringify(
-        {
-            mid: "FIXME",
-            attribute_hash: attr ? attr.hash : "",
-            attribute_value: attr ? attr.value : "",
+        if (myMid && attr && qrDisp) {
+            const handle = callbackService.register((callbackId) => console.log("Peer called to verify " + attr?.name, callbackId));
+            handle.onNewReference((ref) => setQR(myMid + "|" + ref.id));
+            handle.refreshAtInterval(1000);
+            return () => handle.stopRefreshing();
+        } else {
+            setQR("");
         }
-    );
+    }, [myMid, attr, qrDisp]);
+
+    const toggleQR = (name: string) => {
+        if (qrDisp === name) {
+            setQRDisp("");
+        } else {
+            setQRDisp(name)
+        }
+    }
+
     return (
         <div className="subpage nav-compact main-over-nav">
 
@@ -39,14 +51,17 @@ export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
             <main>
                 {!attr ? "Credential Unknown.." : (
                     <CredentialCard
-                        title={attr.title[langCode]}
-                        issuerName={attr.provider.title[langCode]}
-                        imageUrl={""}
-                        showQR
+                        title={fromLanguageDict(attr.title)}
+                        issuerName={fromLanguageDict(attr.provider.title)}
+                        imageUrl={attr.provider.logo_url}
+                        withQRs
+                        onDisplayQR={toggleQR}
                         qrValue={qrValue}
-                        value={attr.value} showDetails={true} showMeta={true}
+                        value={attr.value}
+                        showDetails={true}
+                        showMeta={true}
                         metadata={[
-                            { key: "Signed by", value: attr.provider.title[langCode] },
+                            { key: "Signed by", value: fromLanguageDict(attr.provider.title) },
                             { key: "Created at", value: `${attr.time}` },
                             { key: "Valid until", value: "2020-09-01 13:20:00 CET" },
                         ]} />

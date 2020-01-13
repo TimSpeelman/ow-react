@@ -1,21 +1,24 @@
-import { ServerDescriptor } from '@tsow/ow-attest';
+import { AttestationClient, ServerDescriptor } from '@tsow/ow-attest';
 import { Dict } from '@tsow/ow-attest/dist/types/ipv8/types/Dict';
-import { AppState } from './AppStateService';
-import { OWClientProvider } from './ow-client.provider';
-import { timer } from './util/timer';
+import { timer } from '../shared/util/timer';
+import { LocalState } from "./local/LocalState";
+
+export enum OnlineStatus {
+    ONLINE, PENDING, OFFLINE
+}
 
 /**
  * The ProvidersService keeps track of known providers,
  * checks them for updates and allows us to add new ones
  * by providing a URL.
  */
-export class ProvidersService {
+export class ProviderService {
 
     private online: Dict<OnlineStatus> = {};
 
     constructor(
-        private state: AppState,
-        private owClientProvider: OWClientProvider) { }
+        private state: LocalState,
+        private owClient: AttestationClient) { }
 
     get providers() {
         return this.state.providers;
@@ -40,8 +43,7 @@ export class ProvidersService {
     }
 
     public getByURL(url: string) {
-        return this.owClientProvider.getClient().then(
-            (client) => client.getServerDetails(url));
+        return this.owClient.getServerDetails(url);
     }
 
     public addByURL(url: string) {
@@ -50,9 +52,8 @@ export class ProvidersService {
     }
 
     protected addOrUpdate(details: ServerDescriptor) {
-        const s = this.state.getState();
-        return this.state.save({
-            ...s,
+        const s = this.state;
+        return this.state.store({
             providers: {
                 ...s.providers,
                 [details.id]: details,
@@ -60,8 +61,4 @@ export class ProvidersService {
         });
     }
 
-}
-
-export enum OnlineStatus {
-    ONLINE, PENDING, OFFLINE
 }

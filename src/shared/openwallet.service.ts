@@ -1,23 +1,22 @@
-import { ClientProcedure } from '@tsow/ow-attest';
+import { AttestationClient, ClientProcedure } from '@tsow/ow-attest';
 import 'rxjs/add/operator/map';
-import { LocalAttribute } from './AppStateService';
-import { AttributesService } from './attributes.service';
-import { OWClientProvider } from './ow-client.provider';
-import { ProvidersService } from './providers.service';
+import { LocalState } from "../services/local/LocalState";
+import { ProviderService } from '../services/ProviderService';
+import { LocalAttribute } from "../types/State";
 import { AttributeNV } from './tasks.service';
 
 export class OpenWalletService {
 
     constructor(
-        private providersService: ProvidersService,
-        private attributesService: AttributesService,
-        private clientProvider: OWClientProvider) {
+        private providersService: ProviderService,
+        private localState: LocalState,
+        private owClient: AttestationClient) {
 
         this.setupVerification();
     }
 
     async setupVerification() {
-        const client = await this.clientProvider.getClient();
+        const client = this.owClient;
         const verif = client.verifieeService;
         verif.onNonStagedRequest(function (...args) {
             console.log('Non staged request', args);
@@ -25,38 +24,54 @@ export class OpenWalletService {
         });
     }
 
+    /**
+     * The Agent will request attributes according to a Procedure specified
+     * by a Provider. The End User has approved sharing of the required data
+     * if any. 
+     * 
+     * @param providerId 
+     * @param procedureId 
+     * @param onConsentStore 
+     */
     async requestOWAttestSharingApproved(
         providerId: string,
         procedureId: string,
-        onConsent: (data: AttributeNV[]) => Promise<boolean>
+        onConsentStore: (data: AttributeNV[]) => Promise<boolean>
     ): Promise<LocalAttribute[]> {
+
         const provider = this.providersService.providers[providerId];
         const procedure = provider.procedures[procedureId];
         const requirements = procedure.requirements;
-        const credentials = this.attributesService.attributes
+
+        const dataToShare = this.localState.attributes
             .filter((a) => requirements.indexOf(a.name) >= 0)
             .reduce((c, a) => ({ ...c, [a.name]: a.value }), {});
 
-        const cliproc: ClientProcedure = {
+        const clientProcedure: ClientProcedure = {
             desc: procedure,
             server: {
                 http_address: provider.url,
                 mid_b64: provider.mid_b64,
             }
         };
-        console.log('Initiating Procedure', cliproc);
-        console.log('With credentials', credentials);
-        const result = await this.clientProvider.getClient()
-            .then(client => client.execute(cliproc, credentials, onConsent));
+
+        console.log('Initiating Procedure', clientProcedure);
+        console.log('With credentials', dataToShare);
+
+        const result = await this.owClient.execute(clientProcedure, dataToShare, onConsentStore);
+
+        console.log('Received result', result);
 
         if (!result) {
             return [];
         }
+
         const { data, attestations } = result;
 
         return data.map((attr): LocalAttribute => {
             const attestation = attestations.find(a => a.attribute_name === attr.attribute_name);
-            const attrDesc = procedure.attributes.find(a => a.name === attr.attribute_name);
+            const attrDesc = procedure.attributes.find((a: any) => a.name === attr.attribute_name);
+
             if (attestation && attrDesc) {
                 return {
                     name: attr.attribute_name,
@@ -66,6 +81,8 @@ export class OpenWalletService {
                     provider_title: provider.title,
                     title: attrDesc.title,
                     type: attrDesc.type,
+                    metadata: attestation.metadata,
+                    signer_mid_b64: attestation.signer_mid_64,
                 };
             } else {
                 throw new Error("Attestation or procedure not found"); // FIXME

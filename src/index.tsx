@@ -1,18 +1,20 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from "./App";
-import { I18nCtxProvider } from "./components/I18nContext";
-import { MenuCtxProvider } from "./components/MenuCtx";
+import { I18nContextProvider } from "./hooks/useInternationalization";
+import { LocalStateContextProvider } from "./hooks/useLocalState";
+import { MenuContextProvider } from "./hooks/useMenu";
+import { localState } from "./services";
 import * as serviceWorker from './serviceWorker';
 
-
 const root = (
-    <MenuCtxProvider>
-        <I18nCtxProvider>
-            <App />
-        </I18nCtxProvider>
-    </MenuCtxProvider>
+    <MenuContextProvider>
+        <I18nContextProvider fallbackLangs={["en_US", "en_UK"]}>
+            <LocalStateContextProvider localState={localState}>
+                <App />
+            </LocalStateContextProvider>
+        </I18nContextProvider>
+    </MenuContextProvider>
 );
 
 ReactDOM.render(root, document.getElementById('root'));

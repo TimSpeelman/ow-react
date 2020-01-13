@@ -1,7 +1,7 @@
 import { IPv8API } from "@tsow/ow-attest";
 import _ from "lodash";
-import { AppState } from "../shared/AppStateService";
 import { LocalAttr } from "../types/types";
+import { LocalState } from "./local/LocalState";
 
 export interface IAttributeQuery {
 
@@ -18,16 +18,16 @@ export class AttributeQuery implements IAttributeQuery {
 
     constructor(
         private ipv8API: IPv8API,
-        private state: AppState
+        private localState: LocalState,
     ) { }
 
     async listAttributes(): Promise<LocalAttr[]> {
 
         try {
             const attestationsByHash = await this.ipv8API.listAttestations().then(a => _.keyBy(a, "attribute_hash"));
-            const attributes = await this.state.getState().attributes;
+            const attributes = await this.localState.state.attributes;
 
-            const providers = await this.state.getState().providers;
+            const providers = await this.localState.state.providers;
             const getProvider = (mid: string) => Object.values(providers).find(p => p.mid_b64 === mid)!;
 
             return attributes.filter(a => a.hash in attestationsByHash)

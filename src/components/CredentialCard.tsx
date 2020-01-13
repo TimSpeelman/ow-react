@@ -1,5 +1,6 @@
 import QRCode from "qrcode.react";
 import React, { ReactElement } from 'react';
+import { Icon } from "./Icon";
 
 export const CredentialCard: React.FC<Props> = (p) => (
 
@@ -12,8 +13,11 @@ export const CredentialCard: React.FC<Props> = (p) => (
                 <div className="primary">{p.title}</div>
                 <div className="secondary">{p.issuerName}</div>
             </div>
-            <div className="tool">
-            </div>
+            {!p.withQRs ? "" :
+                <div className="tool">
+                    <span onClick={() => p.onDisplayQR && p.onDisplayQR(p.title)}><Icon qrcode /></span>
+                </div>
+            }
         </div>
 
         {!p.showDetails ? "" : (
@@ -23,11 +27,16 @@ export const CredentialCard: React.FC<Props> = (p) => (
                         <div className="primary">{p.title}</div>
                         <div className="secondary">{p.value}</div>
                     </div>
+                    {!p.withQRs ? "" :
+                        <div className="tool">
+                            <span onClick={() => p.onDisplayQR && p.onDisplayQR(p.title)}><Icon qrcode /></span>
+                        </div>
+                    }
                 </div>
             </div>
         )}
 
-        {!p.showQR || !p.qrValue ? "" : (
+        {!p.withQRs || !p.qrValue ? "" : (
 
             <div className="qr-code">
                 <QRCode value={p.qrValue} size={256} level={"M"} />
@@ -61,9 +70,10 @@ interface Props {
     title: string;
     issuerName: string;
     value?: string;
-    showQR?: boolean;
+    withQRs?: boolean;
     showDetails?: boolean;
     showMeta?: boolean;
     qrValue?: string;
-    metadata?: Array<{ key: string | ReactElement, value: string | ReactElement }>
+    metadata?: Array<{ key: string | ReactElement, value: string | ReactElement }>;
+    onDisplayQR?: (qr: string) => any;
 }
