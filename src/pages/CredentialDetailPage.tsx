@@ -39,6 +39,7 @@ export const CredentialDetailPage: React.FC<Props> = ({ id, useReferenceQR }) =>
             mid: myMid!,
             attribute_hash: attr!.hash,
             attribute_value: attr!.value,
+            attribute_name: attr!.name,
             expiresAt: time + (expirationInSeconds * 1000),
         }
         qrValue = (!myMid || !selectedQR) ? "" : encodeVerifOffer(verificationOffer);

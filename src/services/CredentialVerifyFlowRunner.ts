@@ -1,3 +1,4 @@
+import { VerifierService } from "@tsow/ow-attest";
 import { OpenWalletService } from "../shared/openwallet.service";
 import { Hook } from "../shared/util/Hook";
 import { VerificationOffer } from "./QRService";
@@ -17,6 +18,7 @@ export class CredentialVerifyFlowRunner {
 
     constructor(
         private walletService: OpenWalletService,
+        private verifierService: VerifierService,
     ) { }
 
     userStartsRequest(verifyOffer: VerificationOffer) {
@@ -33,11 +35,22 @@ export class CredentialVerifyFlowRunner {
     }
 
     protected async executeProcedure() {
-        setTimeout(() => this.showVerificationResult(), 1000);
+        // setTimeout(() => this.showVerificationResult(), 1000);
+        this.verifierService.verify(
+            this.offer!.mid,
+            [{
+                attribute_hash: this.offer!.attribute_hash,
+                attribute_value: this.offer!.attribute_value,
+                attribute_name: this.offer!.attribute_name,
+            }],
+            { maxAgeInSeconds: 3600 * 24 * 365 }
+        ).then((result) => {
+            this.showVerificationResult(result);
+        })
     }
 
-    protected showVerificationResult() {
-        this.showMessage("Verification needs to be implemented");
+    protected showVerificationResult(result: boolean) {
+        this.showMessage("The result was: " + (result ? "verified!" : "unverified.."));
         this.done();
     }
 

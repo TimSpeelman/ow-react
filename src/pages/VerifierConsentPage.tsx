@@ -29,6 +29,10 @@ export const VerifierConsentPage: React.FC<Props> = ({ verificationOffer, onSubm
                             <td>{verificationOffer.mid}</td>
                         </tr>
                         <tr>
+                            <td>Attribute Name</td>
+                            <td>{verificationOffer.attribute_name}</td>
+                        </tr>
+                        <tr>
                             <td>Attribute Hash</td>
                             <td>{verificationOffer.attribute_hash}</td>
                         </tr>

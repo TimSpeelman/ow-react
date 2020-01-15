@@ -1,4 +1,4 @@
-import { AttestationClientFactory, IPv8API } from "@tsow/ow-attest";
+import { AttestationClientFactory, IPv8API, IPv8Service, VerifierService } from "@tsow/ow-attest";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { ServiceList } from "./hooks/useServices";
@@ -30,6 +30,11 @@ export const localState = new LocalState(localAPI);
 
 export const ipv8API = new IPv8API(localhostBase);
 export const attributeService = new AttributesService(localState);
+
+export const ipv8Service = new IPv8Service(ipv8API);
+ipv8Service.start();
+export const verifierService = new VerifierService(ipv8Service);
+
 
 export const callbackService = new ReferenceService<PeerCallback>({ destroyWhenNoReferences: true, millisToExpire: 20000 });
 export type PeerCallback = (memberId: string) => any;
@@ -65,6 +70,7 @@ export const initServices = () => localAPI.getMyMID().then((mid): ServiceList =>
         callbackService,
         providersService,
         owService,
+        verifierService,
     }
 });
 

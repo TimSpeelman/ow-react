@@ -1,4 +1,4 @@
-import { IPv8API } from "@tsow/ow-attest";
+import { IPv8API, VerifierService } from "@tsow/ow-attest";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { PeerCallback } from "../services";
 import { AttributesService } from "../services/AttributeService";
@@ -17,6 +17,7 @@ export interface ServiceList {
     callbackService: ReferenceService<PeerCallback>;
     providersService: ProviderService;
     owService: OpenWalletService;
+    verifierService: VerifierService;
 }
 
 export interface ServicesContext {

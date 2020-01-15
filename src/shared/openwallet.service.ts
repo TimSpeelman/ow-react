@@ -20,7 +20,7 @@ export class OpenWalletService {
         const verif = client.verifieeService;
         verif.onNonStagedRequest(function (...args) {
             console.log('Non staged request', args);
-            return Promise.resolve(false);
+            return Promise.resolve(true);
         });
     }
 

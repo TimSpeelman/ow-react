@@ -42,6 +42,7 @@ export class VerificationOfferCodec implements QRDomainDecoder<VerificationOffer
 
 export interface VerificationOffer {
     mid: string;
+    attribute_name: string;
     attribute_hash: string;
     attribute_value: string;
 }
