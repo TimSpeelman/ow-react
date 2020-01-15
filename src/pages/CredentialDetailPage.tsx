@@ -2,14 +2,18 @@ import React, { useMemo, useState } from 'react';
 import { BottomTools } from "../components/BottomTools";
 import { CredentialCard } from "../components/CredentialCard";
 import { SubpageHeader } from "../components/SubpageHeader";
+import { useClock } from "../hooks/useClock";
 import { useInternationalization } from "../hooks/useInternationalization";
 import { usePromised } from "../hooks/usePromised";
 import { useCallbackReference } from "../hooks/useQR";
 import { useSelector } from "../hooks/useSelector";
 import { useServices } from "../hooks/useServices";
 import { getAttributeByHash } from "../services/local/selectors";
+import { makeEncoder, VerificationOfferCodec } from "../services/QRService";
 
-export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
+const encodeVerifOffer = makeEncoder(new VerificationOfferCodec());
+
+export const CredentialDetailPage: React.FC<Props> = ({ id, useReferenceQR }) => {
 
     const { services } = useServices();
     const { fromLanguageDict } = useInternationalization();
@@ -25,7 +29,20 @@ export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
     const onPeerScanMemoized = useMemo(() => onPeerScan, [myMid, attr, selectedQR]);
     const referenceForPeer = useCallbackReference(onPeerScanMemoized, { refreshIntervalMillis: 1000 });
 
-    const qrValue = (!myMid || !selectedQR) ? "" : myMid + "|" + referenceForPeer;
+    let qrValue = (!myMid || !selectedQR) ? "" : myMid + "|" + referenceForPeer;
+
+    const time = useClock(1000);
+
+    if (!useReferenceQR && myMid) {
+        const expirationInSeconds = 10;
+        const verificationOffer = {
+            mid: myMid!,
+            attribute_hash: attr!.hash,
+            attribute_value: attr!.value,
+            expiresAt: time + (expirationInSeconds * 1000),
+        }
+        qrValue = (!myMid || !selectedQR) ? "" : encodeVerifOffer(verificationOffer);
+    }
 
     return (
         <div className="subpage nav-compact main-over-nav">
@@ -63,4 +80,6 @@ export const CredentialDetailPage: React.FC<Props> = ({ id }) => {
 
 interface Props {
     id: string;
+    /** If set to true, will use ReferenceQRs (callback system) instead of data-QRs */
+    useReferenceQR?: boolean;
 }

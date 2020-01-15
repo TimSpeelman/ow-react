@@ -47,3 +47,8 @@ export interface VerificationOffer {
 }
 
 export const qrDecoder = new MultiQRDecoder(new SimpleQRStringCodec(), [new VerificationOfferCodec()])
+
+export function makeEncoder<T>(encoder: QRDomainEncoder<T>) {
+    const strEncoder = new SimpleQRStringCodec();
+    return (payload: T) => strEncoder.encode(encoder.encode(payload));
+}
