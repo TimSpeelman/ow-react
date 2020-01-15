@@ -1,5 +1,6 @@
 import { ServerDescriptor } from "@tsow/ow-attest";
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
 import { SelectInput, SelectOption } from "../components/SelectInput";
 import { SubpageHeader } from "../components/SubpageHeader";
@@ -36,14 +37,27 @@ export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
             />
             <main className="text-center">
                 <h1>Request new credentials</h1>
-                <p>Please pick a provider and the credential you wish to obtain.</p>
 
-                <SelectInput
-                    options={providers}
-                    value={provider}
-                    onChange={setProvider}
-                    emptyMessage={"Select a provider please"}
-                />
+
+                {providers.length === 0 ? (
+                    <div>
+                        <p>You don't know any providers yet.. Please add one to your
+                        contacts first.</p>
+
+                        <Link to="/contacts"><Button primary>Go to contacts</Button></Link>
+                    </div>
+                ) : (
+                        <div>
+                            <p>Please pick a provider and the credential you wish to obtain.</p>
+
+                            <SelectInput
+                                options={providers}
+                                value={provider}
+                                onChange={setProvider}
+                                emptyMessage={"Select a provider please"}
+                            />
+                        </div>
+                    )}
 
                 {!provider ? "" :
                     <SelectInput
@@ -59,8 +73,8 @@ export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
 
                 {provOnline === false ? <p>This provider seems to be offline..</p> : ""}
 
-                <Button onClick={handleSubmit} isPending={pending} disabled={!provOnline || !provider || !procedure}>
-                    Request Attribute</Button>
+                {!provider || !procedure ? "" : <Button onClick={handleSubmit} isPending={pending} disabled={!provOnline || !provider || !procedure}>
+                    Request Attribute</Button>}
             </main>
         </div>
 
