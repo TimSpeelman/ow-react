@@ -46,4 +46,4 @@ export interface VerificationOffer {
     attribute_value: string;
 }
 
-export const decoder = new MultiQRDecoder(new SimpleQRStringCodec(), [new VerificationOfferCodec()])
+export const qrDecoder = new MultiQRDecoder(new SimpleQRStringCodec(), [new VerificationOfferCodec()])
