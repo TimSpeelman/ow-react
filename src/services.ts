@@ -8,7 +8,7 @@ import { LocalState } from "./services/local/LocalState";
 import { ProviderService } from "./services/ProviderService";
 import { ReferenceService } from "./services/ReferenceService";
 import { OpenWalletService } from "./shared/openwallet.service";
-import { AttributeShareRequest } from "./shared/tasks.service";
+import { AttributeShareRequest } from "./shared/types";
 import { Dict } from "./types/Dict";
 
 const portFromUrl = window.location.hash.match(/port=([0-9]+)/);

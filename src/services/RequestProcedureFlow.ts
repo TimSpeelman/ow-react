@@ -1,6 +1,6 @@
 import { ServerDescriptor } from "@tsow/ow-attest";
 import { OpenWalletService } from "../shared/openwallet.service";
-import { AttributeReceiveRequest, AttributeShareRequest } from "../shared/tasks.service";
+import { AttributeReceiveRequest, AttributeShareRequest } from "../shared/types";
 import { Hook } from "../shared/util/Hook";
 import { AttributesService } from "./AttributeService";
 import { ProviderService } from "./ProviderService";

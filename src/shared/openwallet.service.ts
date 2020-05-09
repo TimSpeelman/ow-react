@@ -3,7 +3,7 @@ import { LocalState } from "../services/local/LocalState";
 import { ProviderService } from '../services/ProviderService';
 import { Dict } from "../types/Dict";
 import { LocalAttribute } from "../types/State";
-import { AttributeNV } from './tasks.service';
+import { AttributeNV } from './types';
 
 export class OpenWalletService {
 
