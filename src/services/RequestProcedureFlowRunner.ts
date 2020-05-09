@@ -8,7 +8,7 @@ import { ProviderService } from "./ProviderService";
 export enum Step { INIT, SHARE, RECEIVE, DONE };
 export enum Status { PENDING, COMPLETE, ABORTED, FAILED };
 
-export class RequestProcedureFlow {
+export class RequestProcedureFlowRunner {
     public step: Step = Step.INIT;
     public status: Status = Status.PENDING;
     public hookStep: Hook<Step> = new Hook();
