@@ -1,10 +1,9 @@
 import { IPv8, OpenWallet, Recipe } from "@tsow/ow-ssi";
 import Axios from "axios";
-import { LocalState } from "../services/local/LocalState";
-import { ProviderService } from '../services/ProviderService';
 import { Dict } from "../types/Dict";
 import { LocalAttribute } from "../types/State";
-import { AttributeNV } from './types';
+import { LocalState } from "./local/LocalState";
+import { ProviderService } from './ProviderService';
 
 export class OpenWalletService {
 
@@ -111,31 +110,6 @@ export class OpenWalletService {
             }
         });
     }
-}
-
-
-
-export interface AttestationRequest {
-    provider: string;
-    option: string;
-}
-
-export interface AttestationResult {
-    attributes: AttributeNV[];
-    provider: string;
-    reason: string;
-}
-
-export interface AttestationData {
-    provider: string;
-    attribute_name: string;
-    attribute_value: string;
-    attest_sig_b64: string;
-    server_addr: [string, number];
-}
-
-export interface Mid {
-    mid_b64: string;
 }
 
 export interface OfferedAttribute {

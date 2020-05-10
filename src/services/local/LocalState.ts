@@ -1,5 +1,5 @@
-import { Hook } from "../../shared/util/Hook";
 import { IState } from "../../types/State";
+import { Hook } from "../../util/Hook";
 import { LocalAPI } from "./LocalAPI";
 
 /**

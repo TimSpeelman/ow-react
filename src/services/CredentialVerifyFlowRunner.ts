@@ -1,6 +1,6 @@
 import { IPv8 } from "@tsow/ow-ssi";
-import { OpenWalletService } from "../shared/openwallet.service";
-import { Hook } from "../shared/util/Hook";
+import { Hook } from "../util/Hook";
+import { OpenWalletService } from "./OpenWalletService";
 import { VerificationOffer } from "./QRService";
 
 export enum Step { INIT, CONFIRM, DONE };

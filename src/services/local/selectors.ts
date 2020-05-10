@@ -1,6 +1,6 @@
 import { Recipe } from "@tsow/ow-ssi";
-import { memoizeUnary } from "../../shared/util/memoizeFn";
 import { IState, LocalAttribute } from "../../types/State";
+import { memoizeUnary } from "../../util/memoizeFn";
 
 export function getAttributes(state: IState): Array<LocalAttribute & WithProvider> {
     return state.attributes.map(a => ({

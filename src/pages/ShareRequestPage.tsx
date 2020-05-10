@@ -5,7 +5,7 @@ import { SubpageHeader } from "../components/SubpageHeader";
 import { useInternationalization } from "../hooks/useInternationalization";
 import { useSelector } from "../hooks/useSelector";
 import { getAttributes, getProviderByMid } from "../services/local/selectors";
-import { AttributeShareRequest } from "../shared/types";
+import { AttributeShareRequest } from "../types/types";
 
 export const ShareRequestPage: React.FC<Props> = ({ shareRequest, onSubmitConsent }) => {
     const { fromLanguageDict } = useInternationalization();

@@ -13,8 +13,8 @@
  * references to resolve to the same callback.
  */
 import uuid from "uuid/v4";
-import { Hook } from "../shared/util/Hook";
-import { Interval } from "../shared/util/Interval";
+import { Hook } from "../util/Hook";
+import { Interval } from "../util/Interval";
 
 /**
  * A pointer to some value maintained by a Reference Service

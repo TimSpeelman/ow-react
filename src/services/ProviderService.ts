@@ -1,7 +1,7 @@
 import { Recipe } from "@tsow/ow-ssi";
 import Axios from "axios";
-import { timer } from '../shared/util/timer';
 import { Dict } from '../types/Dict';
+import { timer } from '../util/timer';
 import { LocalState } from "./local/LocalState";
 
 export enum OnlineStatus {

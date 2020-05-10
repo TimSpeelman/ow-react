@@ -4,9 +4,9 @@ import { PeerCallback } from "../services";
 import { AttributesService } from "../services/AttributeService";
 import { LocalAPI } from "../services/local/LocalAPI";
 import { LocalState } from "../services/local/LocalState";
+import { OpenWalletService } from "../services/OpenWalletService";
 import { ProviderService } from "../services/ProviderService";
 import { ReferenceService } from "../services/ReferenceService";
-import { OpenWalletService } from "../shared/openwallet.service";
 
 /** The Context object available to consumers */
 export interface ServiceList {

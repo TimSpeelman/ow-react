@@ -1,8 +1,8 @@
 import { Recipe } from "@tsow/ow-ssi";
-import { OpenWalletService } from "../shared/openwallet.service";
 import { AttributeReceiveRequest, AttributeShareRequest } from "../shared/types";
-import { Hook } from "../shared/util/Hook";
+import { Hook } from "../util/Hook";
 import { AttributesService } from "./AttributeService";
+import { OpenWalletService } from "./OpenWalletService";
 import { ProviderService } from "./ProviderService";
 
 export enum Step { INIT, SHARE, RECEIVE, DONE };

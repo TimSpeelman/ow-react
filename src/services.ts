@@ -5,11 +5,11 @@ import { ServiceList } from "./hooks/useServices";
 import { AttributesService } from "./services/AttributeService";
 import { LocalAPI } from "./services/local/LocalAPI";
 import { LocalState } from "./services/local/LocalState";
+import { OpenWalletService } from "./services/OpenWalletService";
 import { ProviderService } from "./services/ProviderService";
 import { ReferenceService } from "./services/ReferenceService";
-import { OpenWalletService } from "./shared/openwallet.service";
-import { AttributeShareRequest } from "./shared/types";
 import { Dict } from "./types/Dict";
+import { AttributeShareRequest } from "./types/types";
 
 
 const portFromUrl = window.location.hash.match(/port=([0-9]+)/);
@@ -27,13 +27,10 @@ const localhost = axios.create({
 export const localAPI = new LocalAPI(localhost);
 export const localState = new LocalState(localAPI);
 
-export const ipv8API = new IPv8.IPv8API(localhostBase);
 export const attributeService = new AttributesService(localState);
 
 export const ipv8Service = new IPv8.IPv8Service(localhostBase);
 ipv8Service.start();
-export const verifierService = ipv8Service.verifierService
-
 
 export const callbackService = new ReferenceService<PeerCallback>({ destroyWhenNoReferences: true, millisToExpire: 20000 });
 export type PeerCallback = (memberId: string) => any;
