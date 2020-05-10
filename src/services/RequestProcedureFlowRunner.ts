@@ -1,5 +1,5 @@
 import { Recipe } from "@tsow/ow-ssi";
-import { AttributeReceiveRequest, AttributeShareRequest } from "../shared/types";
+import { AttributeReceiveRequest, AttributeShareRequest } from "../types/types";
 import { Hook } from "../util/Hook";
 import { AttributesService } from "./AttributeService";
 import { OpenWalletService } from "./OpenWalletService";
