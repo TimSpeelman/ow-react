@@ -1,6 +1,7 @@
-import { AttestationClient, ServerDescriptor } from '@tsow/ow-attest';
-import { Dict } from '@tsow/ow-attest/dist/types/ipv8/types/Dict';
+import { Recipe } from "@tsow/ow-ssi";
+import Axios from "axios";
 import { timer } from '../shared/util/timer';
+import { Dict } from '../types/Dict';
 import { LocalState } from "./local/LocalState";
 
 export enum OnlineStatus {
@@ -17,8 +18,7 @@ export class ProviderService {
     private online: Dict<OnlineStatus> = {};
 
     constructor(
-        private state: LocalState,
-        private owClient: AttestationClient) { }
+        private state: LocalState) { }
 
     get providers() {
         return this.state.providers;
@@ -43,7 +43,7 @@ export class ProviderService {
     }
 
     public getByURL(url: string) {
-        return this.owClient.getServerDetails(url);
+        return Axios.get(url).then(r => r.data);
     }
 
     public addByURL(url: string) {
@@ -51,7 +51,7 @@ export class ProviderService {
             .then((details) => { this.addOrUpdate(details); return details; });
     }
 
-    protected addOrUpdate(details: ServerDescriptor) {
+    protected addOrUpdate(details: Recipe.RecipeServiceDescriptor) {
         const s = this.state;
         return this.state.store({
             providers: {

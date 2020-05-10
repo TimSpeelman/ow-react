@@ -1,4 +1,4 @@
-import { AttestationClientFactory, IPv8API, IPv8Service, VerifierService } from "@tsow/ow-attest";
+import { IPv8, OpenWallet, Recipe } from "@tsow/ow-ssi";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { ServiceList } from "./hooks/useServices";
@@ -10,6 +10,7 @@ import { ReferenceService } from "./services/ReferenceService";
 import { OpenWalletService } from "./shared/openwallet.service";
 import { AttributeShareRequest } from "./shared/types";
 import { Dict } from "./types/Dict";
+
 
 const portFromUrl = window.location.hash.match(/port=([0-9]+)/);
 
@@ -23,17 +24,15 @@ const localhost = axios.create({
     baseURL: localhostBase + '/api',
 });
 
-
-
 export const localAPI = new LocalAPI(localhost);
 export const localState = new LocalState(localAPI);
 
-export const ipv8API = new IPv8API(localhostBase);
+export const ipv8API = new IPv8.IPv8API(localhostBase);
 export const attributeService = new AttributesService(localState);
 
-export const ipv8Service = new IPv8Service(ipv8API);
+export const ipv8Service = new IPv8.IPv8Service(localhostBase);
 ipv8Service.start();
-export const verifierService = new VerifierService(ipv8Service);
+export const verifierService = ipv8Service.verifierService
 
 
 export const callbackService = new ReferenceService<PeerCallback>({ destroyWhenNoReferences: true, millisToExpire: 20000 });
@@ -57,10 +56,18 @@ export const initServices = () => localAPI.getMyMID().then((mid): ServiceList =>
     console.log("TCL: mid", mid)
 
     const config = { ipv8_url: localhostBase, mid_b64: mid, };
-    const factory = new AttestationClientFactory(config);
-    const owClient = factory.create();
-    providersService = new ProviderService(localState, owClient);
-    owService = new OpenWalletService(providersService, localState, owClient);
+    providersService = new ProviderService(localState);
+    const owVerifiee = new OpenWallet.OWVerifiee(ipv8Service.verifieeService);
+    const owAttestee = new OpenWallet.OWAttestee(ipv8Service.attesteeService);
+    const recipeClient = new Recipe.RecipeClient(mid, owVerifiee, owAttestee);
+    owService = new OpenWalletService(
+        providersService,
+        localState,
+        ipv8Service,
+        recipeClient,
+        owVerifiee,
+        owAttestee,
+    );
 
     return {
         localAPI,

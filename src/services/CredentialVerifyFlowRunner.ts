@@ -1,4 +1,4 @@
-import { VerifierService } from "@tsow/ow-attest";
+import { IPv8 } from "@tsow/ow-ssi";
 import { OpenWalletService } from "../shared/openwallet.service";
 import { Hook } from "../shared/util/Hook";
 import { VerificationOffer } from "./QRService";
@@ -18,7 +18,7 @@ export class CredentialVerifyFlowRunner {
 
     constructor(
         private walletService: OpenWalletService,
-        private verifierService: VerifierService,
+        private verifierService: IPv8.VerifierService,
     ) { }
 
     userStartsRequest(verifyOffer: VerificationOffer) {
@@ -43,7 +43,7 @@ export class CredentialVerifyFlowRunner {
                 attribute_value: this.offer!.attribute_value,
                 attribute_name: this.offer!.attribute_name,
             }],
-            { maxAgeInSeconds: 3600 * 24 * 365 }
+            // { maxAgeInSeconds: 3600 * 24 * 365 }
         ).then((result) => {
             this.showVerificationResult(result);
         })

@@ -1,4 +1,4 @@
-import { ServerDescriptor } from "@tsow/ow-attest";
+import { Recipe } from "@tsow/ow-ssi";
 import { OpenWalletService } from "../shared/openwallet.service";
 import { AttributeReceiveRequest, AttributeShareRequest } from "../shared/types";
 import { Hook } from "../shared/util/Hook";
@@ -26,17 +26,18 @@ export class RequestProcedureFlowRunner {
         private attributeService: AttributesService,
     ) { }
 
-    get provider(): ServerDescriptor | null {
+    get provider(): Recipe.RecipeServiceDescriptor | null {
         return this.providerKey ? this.providersService.providers[this.providerKey] : null;
     }
 
     get procedure() {
         return this.provider && this.procedureKey &&
-            this.provider.procedures[this.procedureKey];
+            this.provider.recipes[this.procedureKey];
     }
 
     get requirements() {
-        return this.procedure && this.procedure.requirements;
+        return this.procedure && (this.procedure.verify_request?.attributes || [])
+            .map(a => a.name);
     }
 
     get shareRequest(): AttributeShareRequest | null {

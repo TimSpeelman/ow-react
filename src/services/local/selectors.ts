@@ -1,4 +1,4 @@
-import { ServerDescriptor } from "@tsow/ow-attest";
+import { Recipe } from "@tsow/ow-ssi";
 import { memoizeUnary } from "../../shared/util/memoizeFn";
 import { IState, LocalAttribute } from "../../types/State";
 
@@ -27,5 +27,5 @@ export function getProviderByMid(mid: string) {
 }
 
 interface WithProvider {
-    provider: ServerDescriptor
+    provider: Recipe.RecipeServiceDescriptor
 }

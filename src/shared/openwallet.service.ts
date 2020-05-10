@@ -1,4 +1,5 @@
-import { AttestationClient, ClientProcedure } from '@tsow/ow-attest';
+import { IPv8, OpenWallet, Recipe } from "@tsow/ow-ssi";
+import Axios from "axios";
 import { LocalState } from "../services/local/LocalState";
 import { ProviderService } from '../services/ProviderService';
 import { Dict } from "../types/Dict";
@@ -10,18 +11,11 @@ export class OpenWalletService {
     constructor(
         private providersService: ProviderService,
         private localState: LocalState,
-        private owClient: AttestationClient) {
+        private ipv8: IPv8.IPv8Service,
+        private recipeClient: Recipe.RecipeClient,
+        private owVerifiee: OpenWallet.OWVerifiee,
+        private owAttestee: OpenWallet.OWAttestee) {
 
-        this.setupVerification();
-    }
-
-    async setupVerification() {
-        const client = this.owClient;
-        const verif = client.verifieeService;
-        verif.onNonStagedRequest(function (...args) {
-            console.log('Non staged request', args);
-            return Promise.resolve(true);
-        });
     }
 
     /**
@@ -40,55 +34,79 @@ export class OpenWalletService {
     ): Promise<LocalAttribute[]> {
 
         const provider = this.providersService.providers[providerId];
-        const procedure = provider.procedures[procedureId];
-        const requirements = procedure.requirements;
+        const recipe = provider.recipes[procedureId];
+        const requirements = (recipe.verify_request?.attributes || []).map(a => a.name);
 
-        const dataToShare = this.localState.attributes
+        // Resolution TODO update
+        const dataToShare: Dict<string> = this.localState.attributes
             .filter((a) => requirements.indexOf(a.name) >= 0)
             .reduce((c, a) => ({ ...c, [a.name]: a.value }), {});
 
-        const clientProcedure: ClientProcedure = {
-            desc: procedure,
-            server: {
-                http_address: provider.url,
-                mid_b64: provider.mid_b64,
+        let vResp: OpenWallet.OWVerifyResponse;
+
+        const process = this.recipeClient.createProcess(recipe);
+
+        const myAtts = await this.ipv8.api.listAttestations();
+
+        if (recipe.verify_request) {
+            vResp = {
+                attributes: recipe.verify_request?.attributes.map((a, i) => ({
+                    hash: myAtts.find(x => x.attribute_name === a.name)?.attribute_hash || "",
+                    ref: a.name,
+                    value: dataToShare[a.name],
+                })),
+                request_hash: "",
+                // @ts-ignore
+                subject_id: this.recipeClient.myId, // FIXME
             }
-        };
+            process.allowVerification(vResp);
+        }
 
-        console.log('Initiating Procedure', clientProcedure);
-        console.log('With credentials', dataToShare);
+        const recipeRequest = process.createRequest(vResp!);
 
-        const _consentStore = (atts: AttributeNV[]) => onConsentStore(atts.map((a): OfferedAttribute => ({
-            name: a.attribute_name,
-            value: a.attribute_value,
-            title: (procedure.attributes.find(x => x.name === a.attribute_name) || {}).title || {},
-            signer_mid_b64: provider.mid_b64,
-        })))
-        const result = await this.owClient.execute(clientProcedure, dataToShare, _consentStore);
+        const httpResponse = await Axios.post(recipe.service_endpoint, { request: recipeRequest });
+        const offer: OpenWallet.OWAttestOffer = httpResponse.data.offer;
 
-        console.log('Received result', result);
+        const data = offer.attributes.map(a => ({
+            name: a.name,
+            value: a.value,
+            title: recipe.attributes.find(x => x.name === a.name)?.title || {},
+            signer_mid_b64: offer.attester_id,
+        }))
 
-        if (!result) {
+        if (!process.validateOffer(offer)) {
+            console.warn("Server offer did not pass validation");
             return [];
         }
 
-        const { data, attestations } = result;
+        const consent = await onConsentStore(data);
 
-        return data.map((attr): LocalAttribute => {
-            const attestation = attestations.find(a => a.attribute_name === attr.attribute_name);
-            const attrDesc = procedure.attributes.find((a: any) => a.name === attr.attribute_name);
+        if (!consent) {
+            return [];
+        }
 
-            if (attestation && attrDesc) {
+        const attributes = await process.requestAttestation(offer);
+
+        console.log('Received result', attributes);
+
+        if (!attributes) {
+            return [];
+        }
+
+        return attributes.map((attr): LocalAttribute => {
+            const attrDesc = recipe.attributes.find((a: any) => a.name === attr.name);
+
+            if (attr && attrDesc) {
                 return {
-                    name: attr.attribute_name,
-                    value: attr.attribute_value,
-                    hash: attestation.attribute_hash,
+                    name: attr.name,
+                    value: attr.value,
+                    hash: attr.hash,
                     time: Date.now(), // FIXME should come from client
                     provider_title: provider.title,
                     title: attrDesc.title,
-                    type: attrDesc.type,
-                    metadata: attestation.metadata,
-                    signer_mid_b64: attestation.signer_mid_64,
+                    type: attrDesc.format,
+                    metadata: attr.metadata,
+                    signer_mid_b64: attr.signer_mid_b64,
                 };
             } else {
                 throw new Error("Attestation or procedure not found"); // FIXME

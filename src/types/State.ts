@@ -1,9 +1,9 @@
-import { ServerDescriptor } from '@tsow/ow-attest';
+import { Recipe } from "@tsow/ow-ssi";
 import { Dict } from "./Dict";
 
 export interface IState {
     attributes: LocalAttribute[];
-    providers: Dict<ServerDescriptor>;
+    providers: Dict<Recipe.RecipeServiceDescriptor>;
 }
 
 export interface LocalAttribute {

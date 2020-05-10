@@ -1,6 +1,5 @@
-import { ServerDescriptor } from "@tsow/ow-attest";
-import { Dict } from "@tsow/ow-attest/dist/types/ipv8/types/Dict";
-
+import { Recipe } from "@tsow/ow-ssi";
+import { Dict } from '../types/Dict';
 
 export interface LocalAttr {
     hash: string;
@@ -17,7 +16,5 @@ export interface LocalAttr {
     time: number;
     signer_mid_b64: string;
 
-    provider: ServerDescriptor;
+    provider: Recipe.RecipeServiceDescriptor;
 }
-
-

@@ -1,4 +1,4 @@
-import { ServerDescriptor } from "@tsow/ow-attest";
+import { Recipe } from "@tsow/ow-ssi";
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
@@ -22,7 +22,7 @@ export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
     useEffect(() => setProcedure(""), [provider]);
 
     const providers = useMemo(() => formatProviders(state.providers, langCode), [state.providers, langCode]);
-    const procedures = useMemo(() => formatProcedures(state.providers, provider, langCode), [state.providers, provider, langCode]);
+    const procedures = useMemo(() => formatRecipes(state.providers, provider, langCode), [state.providers, provider, langCode]);
 
     const handleSubmit = () => {
         setPending(true);
@@ -83,7 +83,7 @@ export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
 }
 
 
-function formatProviders(providers: Dict<ServerDescriptor>, langCode: string): SelectOption[] {
+function formatProviders(providers: Dict<Recipe.RecipeServiceDescriptor>, langCode: string): SelectOption[] {
     return Object.keys(providers).map(key =>
         ({
             value: providers[key].id,
@@ -91,14 +91,14 @@ function formatProviders(providers: Dict<ServerDescriptor>, langCode: string): S
         })).sort((a, b) => a.label > b.label ? -1 : 1);
 }
 
-function formatProcedures(providers: Dict<ServerDescriptor>, provId: string, langCode: string): SelectOption[] {
+function formatRecipes(providers: Dict<Recipe.RecipeServiceDescriptor>, provId: string, langCode: string): SelectOption[] {
     const prov = providers[provId];
     if (!prov) return [];
-    const procs = Object.values(prov.procedures);
-    return procs.map(proc =>
+    const recipes = Object.values(prov.recipes);
+    return recipes.map(recipe =>
         ({
-            value: proc.procedure_name,
-            label: proc.title[langCode],
+            value: recipe.name,
+            label: recipe.title[langCode],
         })).sort((a, b) => a.label > b.label ? -1 : 1);
 }
 

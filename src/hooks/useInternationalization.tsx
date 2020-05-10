@@ -1,5 +1,5 @@
-import { Dict } from "@tsow/ow-attest/dist/types/ipv8/types/Dict";
 import React, { createContext, FC, useContext, useState } from "react";
+import { Dict } from "../types/Dict";
 
 /** The context object for i18n */
 export interface I18nContext {

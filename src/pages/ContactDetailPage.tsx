@@ -43,12 +43,12 @@ export const ContactDetailPage: React.FC<Props> = ({ providerMid }) => {
                 <h2>Credentials</h2>
                 <p>{fromLanguageDict(provider.title)} offers the following credentials:</p>
 
-                {Object.values(provider.procedures).map(procedure => (
+                {Object.values(provider.recipes).map(recipe => (
                     <CredentialCard
                         imageUrl={provider.logo_url}
-                        title={fromLanguageDict(procedure.title)}
+                        title={fromLanguageDict(recipe.title)}
                         issuerName={fromLanguageDict(provider.title)}
-                        key={procedure.procedure_name}
+                        key={recipe.name}
                     />
                 ))}
             </main>
