@@ -12,12 +12,11 @@ import { OpenWalletService } from "../shared/openwallet.service";
 export interface ServiceList {
     localAPI: LocalAPI;
     localState: LocalState;
-    ipv8API: IPv8.IPv8API;
+    ipv8Service: IPv8.IPv8Service;
     attributeService: AttributesService;
     callbackService: ReferenceService<PeerCallback>;
     providersService: ProviderService;
     owService: OpenWalletService;
-    verifierService: IPv8.VerifierService;
 }
 
 export interface ServicesContext {

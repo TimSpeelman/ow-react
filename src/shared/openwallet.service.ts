@@ -12,9 +12,7 @@ export class OpenWalletService {
         private providersService: ProviderService,
         private localState: LocalState,
         private ipv8: IPv8.IPv8Service,
-        private recipeClient: Recipe.RecipeClient,
-        private owVerifiee: OpenWallet.OWVerifiee,
-        private owAttestee: OpenWallet.OWAttestee) {
+        private recipeClient: Recipe.RecipeClient) {
 
     }
 

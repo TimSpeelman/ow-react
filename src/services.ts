@@ -55,7 +55,6 @@ export let owService: OpenWalletService | null = null;
 export const initServices = () => localAPI.getMyMID().then((mid): ServiceList => {
     console.log("TCL: mid", mid)
 
-    const config = { ipv8_url: localhostBase, mid_b64: mid, };
     providersService = new ProviderService(localState);
     const owVerifiee = new OpenWallet.OWVerifiee(ipv8Service.verifieeService);
     const owAttestee = new OpenWallet.OWAttestee(ipv8Service.attesteeService);
@@ -65,19 +64,16 @@ export const initServices = () => localAPI.getMyMID().then((mid): ServiceList =>
         localState,
         ipv8Service,
         recipeClient,
-        owVerifiee,
-        owAttestee,
     );
 
     return {
         localAPI,
         localState,
-        ipv8API,
+        ipv8Service,
         attributeService,
         callbackService,
         providersService,
         owService,
-        verifierService,
     }
 });
 
