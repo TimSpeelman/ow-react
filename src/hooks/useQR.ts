@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { callbackService } from "../services";
+import { callbackService } from "../services/services";
 
 
 export function useCallbackReference(callback: (callbackId: string) => any, options: Options) {

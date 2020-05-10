@@ -5,7 +5,7 @@ import { I18nContextProvider } from "./hooks/useInternationalization";
 import { LocalStateContextProvider } from "./hooks/useLocalState";
 import { MenuContextProvider } from "./hooks/useMenu";
 import { ServicesContextProvider } from "./hooks/useServices";
-import { initServices, localhostBase, localState } from "./services";
+import { initServices, localhostBase, localState } from "./services/services";
 import * as serviceWorker from './serviceWorker';
 
 const root = (

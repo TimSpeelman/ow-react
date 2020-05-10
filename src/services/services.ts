@@ -1,15 +1,15 @@
 import { IPv8, OpenWallet, Recipe } from "@tsow/ow-ssi";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { ServiceList } from "./hooks/useServices";
-import { AttributesService } from "./services/AttributeService";
-import { LocalAPI } from "./services/local/LocalAPI";
-import { LocalState } from "./services/local/LocalState";
-import { OpenWalletService } from "./services/OpenWalletService";
-import { ProviderService } from "./services/ProviderService";
-import { ReferenceService } from "./services/ReferenceService";
-import { Dict } from "./types/Dict";
-import { AttributeShareRequest } from "./types/types";
+import { ServiceList } from "../hooks/useServices";
+import { Dict } from "../types/Dict";
+import { AttributeShareRequest } from "../types/types";
+import { AttributesService } from "./AttributeService";
+import { LocalAPI } from "./local/LocalAPI";
+import { LocalState } from "./local/LocalState";
+import { OpenWalletService } from "./OpenWalletService";
+import { ProviderService } from "./ProviderService";
+import { ReferenceService } from "./ReferenceService";
 
 
 const portFromUrl = window.location.hash.match(/port=([0-9]+)/);

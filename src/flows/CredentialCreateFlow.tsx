@@ -3,8 +3,8 @@ import { CredentialCreatePage } from "../pages/CredentialCreatePage";
 import { ProcedureDonePage } from "../pages/ProcedureDonePage";
 import { ReceiveAttributesPage } from "../pages/ReceiveAttributesPage";
 import { ShareRequestPage } from "../pages/ShareRequestPage";
-import { attributeService, owService, providersService } from "../services";
 import { RequestProcedureFlowRunner, Status } from "../services/RequestProcedureFlowRunner";
+import { attributeService, owService, providersService } from "../services/services";
 
 enum Step { INIT, SHARE, RECEIVE, DONE };
 
