@@ -18,7 +18,7 @@ export const CredentialDetailPage: React.FC<Props> = ({ id, useReferenceQR }) =>
     const { services } = useServices();
     const { fromLanguageDict } = useInternationalization();
     const attr = useSelector(useMemo(() => getAttributeByHash(id), [id]));
-    const myMid = usePromised(() => services!.localAPI.getMyMID().catch(e => console.error(e)));
+    const myMid = usePromised(() => services!.ipv8Service.api.getMyId().catch(e => console.error(e)));
 
     // The user may pick either the QR from the credential or from the attribute
     const [selectedQR, setSelectedQR] = useState<string>("");
