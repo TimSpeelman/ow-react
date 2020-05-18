@@ -29,7 +29,7 @@ export const localState = new LocalState(localAPI);
 
 export const attributeService = new AttributesService(localState);
 
-export const ipv8Service = new IPv8.IPv8Service(localhostBase);
+export const ipv8Service = new IPv8.IPv8Service(localhostBase, 1000);
 ipv8Service.start();
 
 export const callbackService = new ReferenceService<PeerCallback>({ destroyWhenNoReferences: true, millisToExpire: 20000 });
@@ -49,7 +49,7 @@ window.peercalls = (memberId: string, refId: string) => {
 export let providersService: ProviderService | null = null;
 export let owService: OpenWalletService | null = null;
 
-export const initServices = () => localAPI.getMyMID().then((mid): ServiceList => {
+export const initServices = () => ipv8Service.api.getMyId().then((mid): ServiceList => {
     console.log("TCL: mid", mid)
 
     providersService = new ProviderService(localState);

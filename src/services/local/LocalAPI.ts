@@ -8,16 +8,12 @@ export class LocalAPI {
 
     constructor(private axios: AxiosInstance) { }
 
-    getMyMID(): Promise<string> {
-        return this.axios.get(`/me`).then(response => response.data.mid_b64);
-    }
-
-    getState() {
-        return this.axios.get('/state').then(response => response.data);
+    getState(): Promise<IState> {
+        return Promise.resolve(JSON.parse(localStorage.getItem("state") || "{}"));
     }
 
     putState(state: IState) {
-        return this.axios.put('/state', state);
+        return Promise.resolve(localStorage.setItem("state", JSON.stringify(state)));
     }
 
 }

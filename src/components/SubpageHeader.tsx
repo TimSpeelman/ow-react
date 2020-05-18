@@ -15,9 +15,8 @@ export const SubpageHeaderNo: React.FC<Props> = (p: Props) => (
     <div>
         <header>
             <div className="content">
-                <div className="back-arrow">
-                    <Link to={p.backUrl}><Icon chevron-left /></Link>
-                </div>
+                <Link className="back-arrow" to={p.backUrl}><Icon chevron-left /></Link>
+
                 <div className="page-title">{p.pageTitle}</div>
 
                 <div className="burger-menu" onClick={p.openMenu}>
