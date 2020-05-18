@@ -3,6 +3,7 @@ import { HashRouter as Router, Route, Switch, useHistory, useParams } from "reac
 import './assets/css/font-awesome.min.css';
 import './assets/css/index.css';
 import { Sidemenu } from "./components/Sidemenu";
+import { DemoPage } from "./demo";
 import { CredentialCreateFlow } from "./flows/CredentialCreateFlow";
 import { CredentialVerifyFlow } from "./flows/CredentialVerifyFlow";
 import { useServices } from "./hooks/useServices";
@@ -35,6 +36,7 @@ export const AppBody: React.FC = () => {
             <Sidemenu />
 
             <Switch>
+                <Route path="/x"><DemoPage /></Route>
                 <Route path="/create"><CredentialCreateFlow /></Route>
                 <Route path="/verify/:offer"><SpecificCredentialVerifyFlow /></Route>
                 <Route path="/detail/:id"><SpecificCredentialDetailPage /></Route>
