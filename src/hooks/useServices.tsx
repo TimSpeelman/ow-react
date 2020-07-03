@@ -1,4 +1,4 @@
-import { IPv8 } from "@tsow/ow-ssi";
+import { IPv8Service } from "@tsow/ow-ssi/dist/types/src/ipv8/IPv8Service";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AttributesService } from "../services/AttributeService";
 import { LocalAPI } from "../services/local/LocalAPI";
@@ -12,7 +12,7 @@ import { PeerCallback } from "../services/services";
 export interface ServiceList {
     localAPI: LocalAPI;
     localState: LocalState;
-    ipv8Service: IPv8.IPv8Service;
+    ipv8Service: IPv8Service;
     attributeService: AttributesService;
     callbackService: ReferenceService<PeerCallback>;
     providersService: ProviderService;

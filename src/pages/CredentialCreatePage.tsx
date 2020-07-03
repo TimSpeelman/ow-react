@@ -6,20 +6,28 @@ import { SelectInput, SelectOption } from "../components/SelectInput";
 import { SubpageHeader } from "../components/SubpageHeader";
 import { useInternationalization } from "../hooks/useInternationalization";
 import { useLocalState } from "../hooks/useLocalState";
+import { useServices } from "../hooks/useServices";
 import { Dict } from "../types/Dict";
 
 export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
 
     const { langCode } = useInternationalization();
     const { state } = useLocalState();
+    const { services } = useServices();
 
     const [provider, setProvider] = useState<string>("");
     const [procedure, setProcedure] = useState<string>("");
-    const [provOnline] = useState<null | boolean>(true);
     const [pending, setPending] = useState(false);
 
     // Clear the chosen procedure once user changes the provider
     useEffect(() => setProcedure(""), [provider]);
+
+    const [peers, setPeers] = useState<string[]>([])
+
+    useEffect(() => {
+        const i = setInterval(() => setPeers(services!.ipv8Service.observer.peerPoller.cache), 300)
+        return () => clearInterval(i);
+    })
 
     const providers = useMemo(() => formatProviders(state.providers, langCode), [state.providers, langCode]);
     const procedures = useMemo(() => formatRecipes(state.providers, provider, langCode), [state.providers, provider, langCode]);
@@ -28,6 +36,14 @@ export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
         setPending(true);
         onSubmitRequest(provider, procedure);
     }
+
+    const provStatus =
+        peers.length === 0 ? "No peers known!"
+            : provider == "" ? ""
+                : !state.providers[provider] ? "Unknown provider selected"
+                    : peers.indexOf(state.providers[provider].mid_b64) >= 0 ? "Provider Online"
+                        : "Provider Offline";
+    const provOnline = peers.indexOf(state.providers[provider]?.mid_b64) >= 0
 
     return (
         <div className="subpage nav-compact">
@@ -71,7 +87,7 @@ export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
                 <br />
                 <br />
 
-                {provOnline === false ? <p>This provider seems to be offline..</p> : ""}
+                <p>{provStatus}</p>
 
                 {!provider || !procedure ? "" : <Button onClick={handleSubmit} isPending={pending} disabled={!provOnline || !provider || !procedure}>
                     Request Attribute</Button>}
