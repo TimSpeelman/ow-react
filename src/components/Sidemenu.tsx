@@ -1,7 +1,8 @@
 import classNames from "classnames";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { useMenu } from "../hooks/useMenu";
+import { usePromised } from "../hooks/usePromised";
 import { useServices } from "../hooks/useServices";
 import { fallbackBool } from "../util/fallbackBool";
 import { Icon } from "./Icon";
@@ -14,7 +15,16 @@ export const Sidemenu: React.FC = () => {
 }
 
 export const SidemenuNo: React.FC<Props> = ({ toggleMenu, isOpen }: Props) => {
-    const { path } = useServices();
+    const { services, path } = useServices();
+    const myMid = usePromised(() => services!.ipv8Service.api.getMyId().catch(e => console.error(e)));
+
+    const [peers, setPeers] = useState<string[]>([])
+
+    useEffect(() => {
+        const i = setInterval(() => setPeers(services!.ipv8Service.observer.peerPoller.cache), 300)
+        return () => clearInterval(i);
+    })
+
     return (
         <div className={classNames({ "side-menu-open": isOpen })}>
             <div className="side-menu-close" onClick={() => toggleMenu(false)}>
@@ -45,7 +55,10 @@ export const SidemenuNo: React.FC<Props> = ({ toggleMenu, isOpen }: Props) => {
                             <Icon cog /><span>Settings</span>
                         </Link>
                     </li>
+                    <p><strong>Debug Information:</strong></p>
                     <p>Using agent: {path}</p>
+                    <p>Using mid: {myMid}</p>
+                    <p>Known peers: {peers.length} ({peers.map(p => p.substr(0, 5)).join(", ")})</p>
                 </ul>
             </div>
 
