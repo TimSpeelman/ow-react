@@ -212,13 +212,13 @@ main {
   position: relative;
   padding: 16px;
   padding-top: 32px;
-  height: calc(100vh - $header_height);
+  height: calc(100vh - 127px);
   overflow-y: auto;
   margin-top: 97px;
 }
 
 .nav-compact main {
-  height: calc(100vh - $header_height_compact);
+  height: calc(100vh - 80px);
   margin-top: 50px;
 }
 

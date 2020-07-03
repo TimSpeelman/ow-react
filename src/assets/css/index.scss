@@ -189,11 +189,11 @@ main {
     position: relative;
     padding: 16px;
     padding-top: 32px;
-    height: calc(100vh - $header_height);
+    height: calc(100vh - #{$header_height});
     overflow-y: auto;
     margin-top: $header_height - 30px;
     .nav-compact & {
-        height: calc(100vh - $header_height_compact);
+        height: calc(100vh - #{$header_height_compact});
         margin-top: $header_height_compact - 30px;
     }
     .main-over-nav & {
