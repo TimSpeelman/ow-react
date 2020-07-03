@@ -39,7 +39,7 @@ export const CredentialCreatePage: React.FC<Props> = ({ onSubmitRequest }) => {
 
     const provStatus =
         peers.length === 0 ? "No peers known!"
-            : provider == "" ? ""
+            : provider === "" ? ""
                 : !state.providers[provider] ? "Unknown provider selected"
                     : peers.indexOf(state.providers[provider].mid_b64) >= 0 ? "Provider Online"
                         : "Provider Offline";

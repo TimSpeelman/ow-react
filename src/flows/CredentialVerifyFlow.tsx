@@ -17,7 +17,7 @@ export const CredentialVerifyFlow: React.FC<Props> = ({ verifyOffer }) => {
         flow = new CredentialVerifyFlowRunner(services!.owService, services!.ipv8Service.verifierService);
         flow.hookStep.on(step => { console.log(step); setStep(step) });
         flow.userStartsRequest(verifyOffer)
-    }, []);
+    }, [services, verifyOffer]);
 
     const handleConfirm = (consent: boolean) => flow.userConsentsToVerify(consent);
 

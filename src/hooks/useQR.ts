@@ -13,7 +13,11 @@ export function useCallbackReference(callback: (callbackId: string) => any, opti
         handle.refreshAtInterval(options.refreshIntervalMillis);
 
         return () => options.destroyOnUnmount ? handle.destroy() : handle.stopRefreshing();
-    }, [callback]);
+    }, [
+        callback,
+        options.refreshIntervalMillis,
+        options.destroyOnUnmount
+    ]);
 
     return value;
 }

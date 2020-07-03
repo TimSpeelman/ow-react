@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { Button } from "../components/Button";
 import { CredentialCard } from "../components/CredentialCard";
 import { SubpageHeader } from "../components/SubpageHeader";
-import { useInternationalization } from "../hooks/useInternationalization";
 import { InformedVerifyRequest } from "../types/InformedVerifyRequest";
 
 export const VerifieeConsentPage: React.FC<Props> = ({ request, onSubmitConsent }) => {
-    const { fromLanguageDict } = useInternationalization();
-
     const [pending, setPending] = useState(false);
 
     const handleSubmit = (consent: boolean) => {

@@ -36,7 +36,7 @@ export const ServicesContextProvider: React.FC<Props> = ({ children, initService
 
     useEffect(() => {
         initServices().then(s => setContext(s)).catch(setError);
-    }, []);
+    }, [initServices]);
 
     const context = {
         ready: !!services,
