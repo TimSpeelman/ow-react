@@ -14,6 +14,7 @@ import { ContactDetailPage } from "./pages/ContactDetailPage";
 import { ContactIndexPage } from "./pages/ContactIndexPage";
 import { CredentialDetailPage } from "./pages/CredentialDetailPage";
 import { CredentialIndexPage } from "./pages/CredentialIndexPage";
+import { DebugPage } from "./pages/DebugPage";
 import { QrReaderPage } from "./pages/QrReaderPage";
 import { qrDecoder } from "./services/QRService";
 
@@ -36,6 +37,7 @@ export const AppBody: React.FC = () => {
             <Sidemenu />
 
             <Switch>
+                <Route path="/debug"><DebugPage /></Route>
                 <Route path="/x"><DemoPage /></Route>
                 <Route path="/create"><CredentialCreateFlow /></Route>
                 <Route path="/verify/:offer"><SpecificCredentialVerifyFlow /></Route>
