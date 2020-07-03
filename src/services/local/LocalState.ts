@@ -14,10 +14,12 @@ export class LocalState {
 
     public stateChangeHook: Hook<IState> = new Hook();
 
-    private _state: IState = {
+    private defaultState: IState = {
         attributes: [],
         providers: {},
     };
+
+    private _state: IState = this.defaultState;
 
     get state() {
         return this._state;
@@ -38,7 +40,14 @@ export class LocalState {
 
     fetch() {
         return this.localApi.getState()
-            .then(response => this.updateState(response));
+            .then(response => {
+                if (!response) {
+                    console.log("Local state is empty, creating default");
+                    this.store(this.defaultState);
+                } else {
+                    this.updateState(response)
+                }
+            });
     }
 
     store(state: Partial<IState>) {

@@ -9,11 +9,13 @@ export class LocalAPI {
     constructor(private axios: AxiosInstance) { }
 
     getState(): Promise<IState> {
-        return Promise.resolve(JSON.parse(localStorage.getItem("state") || "{}"));
+        return this.axios.get("/state").then((d) => d.data)
+        // return Promise.resolve(JSON.parse(localStorage.getItem("state") || "{}"));
     }
 
     putState(state: IState) {
-        return Promise.resolve(localStorage.setItem("state", JSON.stringify(state)));
+        return this.axios.put("/state", state)
+        // return Promise.resolve(localStorage.setItem("state", JSON.stringify(state)));
     }
 
 }

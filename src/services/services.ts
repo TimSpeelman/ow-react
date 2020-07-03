@@ -15,13 +15,13 @@ import { ReferenceService } from "./ReferenceService";
 const portFromUrl = window.location.hash.match(/port=([0-9]+)/);
 
 const cookie = new Cookies();
-const port = (portFromUrl ? portFromUrl[1] : null) || cookie.get("port") || "8124";
+const port = (portFromUrl ? portFromUrl[1] : null) || cookie.get("port") || "8642";
 cookie.set("port", port);
 
 export const localhostBase = `http://localhost:${port}`;
 
 const localhost = axios.create({
-    baseURL: localhostBase + '/api',
+    baseURL: localhostBase,
 });
 
 export const localAPI = new LocalAPI(localhost);
