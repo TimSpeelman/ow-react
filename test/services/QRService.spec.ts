@@ -1,7 +1,7 @@
 import { DecodeStatus } from "../../src/modules/QR/GenericDecoding";
 import { QRDecodeError } from "../../src/modules/QR/QREncoding";
 import { qrDecoder, SimpleQRStringCodec, VerificationOfferCodec } from "../../src/services/QRService";
-import { describe, expect, it } from "./setup";
+import { describe, expect, it } from "../setup";
 
 describe("QRService", function () {
 

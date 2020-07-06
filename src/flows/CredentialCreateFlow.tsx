@@ -4,7 +4,9 @@ import { ProcedureDonePage } from "../pages/ProcedureDonePage";
 import { ReceiveAttributesPage } from "../pages/ReceiveAttributesPage";
 import { ShareRequestPage } from "../pages/ShareRequestPage";
 import { RequestProcedureFlowRunner, Status } from "../services/RequestProcedureFlowRunner";
-import { attributeService, owService, providersService } from "../services/services";
+import { wallet } from "../services/services";
+
+const { attributeService, owService, providersService } = wallet;
 
 enum Step { INIT, SHARE, RECEIVE, DONE };
 

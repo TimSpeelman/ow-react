@@ -47,6 +47,7 @@ export class OpenWalletService {
 
         if (recipe.verify_request) {
             vResp = {
+                type: "OWVerifyResponse",
                 attributes: recipe.verify_request?.attributes.map((a, i) => ({
                     hash: myAtts.find(x => x.attribute_name === a.name)?.attribute_hash || "",
                     ref: a.name,

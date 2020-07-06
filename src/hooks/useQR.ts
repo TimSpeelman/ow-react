@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { callbackService } from "../services/services";
+import { wallet } from "../services/services";
 
 
 export function useCallbackReference(callback: (callbackId: string) => any, options: Options) {
@@ -7,7 +7,7 @@ export function useCallbackReference(callback: (callbackId: string) => any, opti
     const [value, setValue] = useState<string>("");
 
     useEffect(() => {
-        const handle = callbackService.register(callback);
+        const handle = wallet.callbackService.register(callback);
 
         handle.onNewReference(ref => setValue(ref.id));
         handle.refreshAtInterval(options.refreshIntervalMillis);
