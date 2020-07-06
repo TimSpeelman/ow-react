@@ -58,6 +58,7 @@ export interface IGrant {
 }
 
 export interface ITrustedLocation {
+    id: string;
     name: string;
     rootMid: string;
 }   

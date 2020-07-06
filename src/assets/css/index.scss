@@ -641,3 +641,45 @@ label {
         background: rgba(0,0,0,0.7);
     }
 }
+
+
+////////////////
+// QR OVERLAY //
+////////////////
+
+.qr-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right :0;
+    bottom :0;
+    padding : 16px;
+    z-index: 9000;
+    background: #424242;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    transition: all .3s;
+
+    h1 {
+        color: white;
+    }
+
+    .btn.secondary {
+        color: black;
+        background: rgba(255,255,255,1)
+    }
+
+    &.hidden {
+        z-index: -2;
+        opacity: 0;
+        transition: none;
+
+        
+        & > div {
+            margin-top: 32px;
+        }
+    }
+}

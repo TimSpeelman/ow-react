@@ -48,10 +48,10 @@ export const AppBody: React.FC = () => {
 
             <Switch>
                 <Route path="/module/1/create"><ModuleCreateSitePage /></Route>
-                <Route path="/module/1/grant"><ModuleGrantAccessPage /></Route>
+                <Route path="/module/1/my-locs/:siteId/grant"><SpecificGrantAccessPage /></Route>
+                <Route path="/module/1/my-locs/:siteId"><SpecificManageSitePage /></Route>
+                <Route path="/module/1/my-locs"><ModuleManageSitesPage /></Route>
                 <Route path="/module/1/my"><ModuleMyAccessPage /></Route>
-                <Route path="/module/1/manage-site/:siteId"><SpecificManageSitePage /></Route>
-                <Route path="/module/1/manage"><ModuleManageSitesPage /></Route>
                 <Route path="/module/1/trusted-sites"><ModuleTrustedSitesPage /></Route>
                 <Route path="/module/1/verify/result"><ModuleAccessVerifyResultPage /></Route>
                 <Route path="/module/1/verify"><ModuleAccessVerifyPage /></Route>
@@ -91,4 +91,9 @@ function SpecificContactDetailPage() {
 function SpecificManageSitePage() {
     let params: any = useParams();
     return <ModuleManageSitePage siteId={params.siteId} />
+}
+
+function SpecificGrantAccessPage() {
+    let params: any = useParams();
+    return <ModuleGrantAccessPage siteId={params.siteId} />
 }

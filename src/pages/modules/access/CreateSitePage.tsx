@@ -17,7 +17,7 @@ export const ModuleCreateSitePage: React.FC = () => {
         const id = uuid();
         services?.accessModuleService.addLocation({ name, grants: [], id })
 
-        window.location.assign("#/module/1/manage");
+        window.location.assign("#/module/1/my-locs");
     }
 
     return (
@@ -40,7 +40,7 @@ export const ModuleCreateSitePage: React.FC = () => {
 
                     <Button type="submit" primary>Add Location</Button>
 
-                    <Link to="/module/1/manage">
+                    <Link to="/module/1/my-locs">
                         <Button>Cancel</Button>
                     </Link>
                 </form>

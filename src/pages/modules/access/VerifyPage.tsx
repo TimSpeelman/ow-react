@@ -2,18 +2,35 @@ import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/Button";
 import { Icon } from "../../../components/Icon";
+import { ModalQRScan } from "../../../components/ModalQRScan";
 import { SelectInput } from "../../../components/SelectInput";
 import { SubpageHeader } from "../../../components/SubpageHeader";
+import { getMyLocations, getTrustedLocations } from "../../../services/access-module/selectors";
+import { useAMSelector } from "../../../services/access-module/useSelector";
 
 export const ModuleAccessVerifyPage: React.FC = () => {
 
-    const sites = [{ name: "Nijmegen" }, { name: "Delft" }, { name: "Enschede" }, { name: "Utrecht" }]
-    const options = sites.map(s => ({ value: s.name, label: s.name }))
+    const myLocations = useAMSelector(getMyLocations);
+    const trustedLocations = useAMSelector(getTrustedLocations);
+    const options = [
+        ...myLocations.map(l => ({ value: l.id, label: l.name + ` (me)` })),
+        ...trustedLocations.map(l => ({ value: l.id, label: l.name + ` (${l.rootMid.substr(0, 5)})` }))
+    ]
 
     const [selectedSite, setSite] = useState("");
+    const [qr, setQR] = useState("");
+
+    const [qrOpen, setQrOpen] = useState(false);
+
+    const handleScan = (code: string)  => {
+        setQR(code);
+        setQrOpen(false);
+    }
 
     return (
         <div className="subpage nav-compact">
+
+            <ModalQRScan onRequestClose={() => setQrOpen(false)} onScanQR={handleScan} open={qrOpen} />
 
             <SubpageHeader
                 pageTitle={"Verify Site Access"}
@@ -34,15 +51,16 @@ export const ModuleAccessVerifyPage: React.FC = () => {
                 <br />
                 <br />
 
+                {(selectedSite !== "") && (
+                    <Button primary onClick={() => setQrOpen(true)}><Icon id-badge /> Scan Visitor's Badge</Button>
+                )}
+
                 <Link to="/module/1/trusted-sites">
                     <Button><Icon plus /> Add a different site</Button>
                 </Link> <br />
 
-                {(selectedSite !== "") && (
-                    <Link to="/qr">
-                        <Button primary><Icon id-badge /> Scan Visitor's Badge</Button>
-                    </Link>
-                )}
+                <p>{qr}</p>
+
             </main>
 
         </div>

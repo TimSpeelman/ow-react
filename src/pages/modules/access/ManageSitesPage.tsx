@@ -4,7 +4,7 @@ import { Button } from "../../../components/Button";
 import { CredentialCard } from "../../../components/CredentialCard";
 import { Icon } from "../../../components/Icon";
 import { SubpageHeader } from "../../../components/SubpageHeader";
-import { getLocations } from "../../../services/access-module/selectors";
+import { getMyLocations } from "../../../services/access-module/selectors";
 import { useAMSelector } from "../../../services/access-module/useSelector";
 
 export const ModuleManageSitesPage: React.FC = () => {
@@ -12,7 +12,7 @@ export const ModuleManageSitesPage: React.FC = () => {
     const sites = [{ name: "Nijmegen" }, { name: "Delft" }, { name: "Enschede" }, { name: "Utrecht" }]
     const options = sites.map(s => ({ value: s.name, label: s.name }))
 
-    const locations = useAMSelector(getLocations);
+    const locations = useAMSelector(getMyLocations);
 
     const [selectedSite, setSite] = useState("");
     const [status, setStatus] = useState("succeeded");
@@ -36,7 +36,7 @@ export const ModuleManageSitesPage: React.FC = () => {
 
                 {locations.map(loc => (
 
-                    <Link to={`/module/1/manage-site/${loc.id}`}>
+                    <Link to={`/module/1/my-locs/${loc.id}`}>
                         <CredentialCard
                             issuerName={`${loc.grants.length} people have access`}
                             title={loc.name} />

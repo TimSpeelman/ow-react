@@ -27,7 +27,7 @@ export const ModuleStartPage: React.FC = () => {
                         <Button><Icon shield-alt /> Verify Access</Button>
                     </Link> <br />
 
-                    <Link to="/module/1/manage">
+                    <Link to="/module/1/my-locs">
                         <Button><Icon tasks /> Manage Access</Button>
                     </Link> <br />
 

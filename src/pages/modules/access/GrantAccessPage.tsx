@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "../../../components/Button";
 import { CredentialCard } from "../../../components/CredentialCard";
 import { Icon } from "../../../components/Icon";
 import { SubpageHeader } from "../../../components/SubpageHeader";
+import { getMyLocations } from "../../../services/access-module/selectors";
+import { useAMSelector } from "../../../services/access-module/useSelector";
 
-export const ModuleGrantAccessPage: React.FC = () => {
+export const ModuleGrantAccessPage: React.FC<Props> = ({ siteId }) => {
 
-    const sites = [{ name: "Nijmegen" }, { name: "Delft" }, { name: "Enschede" }, { name: "Utrecht" }]
-    const options = sites.map(s => ({ value: s.name, label: s.name }))
+    const locations = useAMSelector(getMyLocations);
+    const site = locations.find(l => l.id === siteId);
 
-    const [selectedSite, setSite] = useState("");
-    const [status, setStatus] = useState("succeeded");
-    const site = sites[0];
-
-    return (
+    return !site ? <div>...</div> : (
         <div className="subpage nav-compact">
 
             <SubpageHeader
                 pageTitle={"Grant Location Access"}
-                backUrl={"/module/1/manage-site"}
+                backUrl={"/module/1/my-locs/" + siteId}
             />
 
             <main>
@@ -26,8 +24,8 @@ export const ModuleGrantAccessPage: React.FC = () => {
                 <p>You are about to grant someone access to the following location:</p>
 
                 <CredentialCard
-                    issuerName={"2 people have access"}
-                    title={"Nijmegen Construction"} />
+                    issuerName={`${site.grants.length} people have access`}
+                    title={site.name} />
 
                 <p>How would you like to share this access?</p>
 
@@ -41,4 +39,8 @@ export const ModuleGrantAccessPage: React.FC = () => {
 
         </div>
     )
+}
+
+export interface Props {
+    siteId: string;
 }

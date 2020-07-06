@@ -6,7 +6,7 @@ import { Icon } from "../../../components/Icon";
 import { Modal } from "../../../components/Modal";
 import { SubpageHeader } from "../../../components/SubpageHeader";
 import { useServices } from "../../../hooks/useServices";
-import { getLocations } from "../../../services/access-module/selectors";
+import { getMyLocations } from "../../../services/access-module/selectors";
 import { useAMSelector } from "../../../services/access-module/useSelector";
 
 export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
@@ -14,14 +14,14 @@ export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
     const { services } = useServices();
     const acModule = services?.accessModuleService!;
 
-    const locations = useAMSelector(getLocations);
+    const locations = useAMSelector(getMyLocations);
     const location = locations.find(l => l.id === siteId)
 
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const showDeleteModal = () => setDeleteModalOpen(true);
     const deleteLocation = () => {
         acModule.deleteLocation(siteId);
-        window.location.assign("#/module/1/manage")
+        window.location.assign("#/module/1/my-locs")
     }
 
     const [grantModalOpen, setGrantModalOpen] = useState(false);
@@ -51,7 +51,7 @@ export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
 
             <SubpageHeader
                 pageTitle={"Manage Location Access"}
-                backUrl={"/module/1/manage"}
+                backUrl={"/module/1/my-locs"}
             />
 
             <main>
@@ -62,7 +62,7 @@ export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
                     <Icon shield-alt /> Share with Gate Keepers
                 </Button>
 
-                <Link to="/module/1/grant">
+                <Link to={`/module/1/my-locs/${siteId}/grant`}>
                     <Button><Icon user-plus /> Grant Access</Button>
                 </Link>
 

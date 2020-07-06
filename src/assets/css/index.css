@@ -780,4 +780,49 @@ label {
   bottom: 0;
   background: rgba(0, 0, 0, 0.7);
 }
+
+.qr-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px;
+  z-index: 9000;
+  background: #424242;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  text-align: center;
+  color: white;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+}
+
+.qr-overlay h1 {
+  color: white;
+}
+
+.qr-overlay .btn.secondary {
+  color: black;
+  background: white;
+}
+
+.qr-overlay.hidden {
+  z-index: -2;
+  opacity: 0;
+  -webkit-transition: none;
+  transition: none;
+}
+
+.qr-overlay.hidden > div {
+  margin-top: 32px;
+}
 /*# sourceMappingURL=index.css.map */
