@@ -36,13 +36,23 @@ export const SidemenuNo: React.FC<Props> = ({ toggleMenu, isOpen }: Props) => {
             <div className="side-menu">
                 <ul>
                     <li>
+                        <Link to="/badge" onClick={() => toggleMenu(false)}>
+                            <Icon id-badge /><span>My Badge</span>
+                        </Link>
+                    </li>
+                    <li>
                         <Link to="/attestations" onClick={() => toggleMenu(false)}>
-                            <Icon id-card /><span>Credentials</span>
+                            <Icon wallet /><span>Credentials</span>
                         </Link>
                     </li>
                     <li>
                         <Link to="/contacts" onClick={() => toggleMenu(false)}>
                             <Icon users /><span>Contacts</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/module/1" onClick={() => toggleMenu(false)}>
+                            <Icon cubes /><span>Module 'Site Access'</span>
                         </Link>
                     </li>
                     <li>

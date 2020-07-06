@@ -4,6 +4,8 @@ import Cookies from "universal-cookie";
 import { ServiceList } from "../hooks/useServices";
 import { Dict } from "../types/Dict";
 import { AttributeShareRequest } from "../types/types";
+import { AccessModuleService } from "./access-module/AccessModuleService";
+import { AccessModuleState } from "./access-module/State";
 import { AttributesService } from "./AttributeService";
 import { LocalAPI } from "./local/LocalAPI";
 import { LocalState } from "./local/LocalState";
@@ -26,6 +28,7 @@ const localhost = axios.create({
 
 export const localAPI = new LocalAPI(localhost);
 export const localState = new LocalState(localAPI);
+export const accessState = new AccessModuleState(localState);
 
 export const attributeService = new AttributesService(localState);
 
@@ -62,6 +65,7 @@ export const initServices = () => ipv8Service.api.getMyId().then((mid): ServiceL
         ipv8Service,
         recipeClient,
     );
+    const accessModuleService = new AccessModuleService(accessState);
 
     return {
         localAPI,
@@ -71,6 +75,7 @@ export const initServices = () => ipv8Service.api.getMyId().then((mid): ServiceL
         callbackService,
         providersService,
         owService,
+        accessModuleService,
     }
 });
 

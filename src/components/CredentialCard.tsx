@@ -7,9 +7,11 @@ export const CredentialCard: React.FC<Props> = (p) => (
 
     <div className="card-item">
         <div className="row">
-            <div className="logo-box">
-                <img style={{ width: "80%" }} src={p.imageUrl} alt="" />
-            </div>
+            {!!p.imageUrl && (
+                <div className="logo-box">
+                    <img style={{ width: "80%" }} src={p.imageUrl} alt="" />
+                </div>
+            )}
             <div className="text-box">
                 <div className="primary">{p.title}</div>
                 <div className="secondary">{p.issuerName}</div>
@@ -69,7 +71,7 @@ export const CredentialCard: React.FC<Props> = (p) => (
 
 
 interface Props {
-    imageUrl: string;
+    imageUrl?: string;
     title: string;
     issuerName: string;
     value?: string;

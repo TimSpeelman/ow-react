@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import React, { ReactElement } from "react";
+import React from "react";
 
 export const Button: React.FC<Props> = ({ onClick, isPending, primary, children, ...props }: Props) => (
     <button  {...props} onClick={onClick} className={classnames(["btn", { pending: isPending, primary: primary, secondary: !primary }])}>
@@ -16,7 +16,7 @@ export const Button: React.FC<Props> = ({ onClick, isPending, primary, children,
 interface Props {
     onClick?: (newVal: any) => any;
     isPending?: boolean;
-    children?: string | ReactElement;
+    children?: any;
     primary?: boolean;
     disabled?: boolean;
     type?: "button" | "reset" | "submit";

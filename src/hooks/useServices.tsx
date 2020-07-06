@@ -1,5 +1,6 @@
 import { IPv8Service } from "@tsow/ow-ssi/dist/types/src/ipv8/IPv8Service";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { AccessModuleService } from "../services/access-module/AccessModuleService";
 import { AttributesService } from "../services/AttributeService";
 import { LocalAPI } from "../services/local/LocalAPI";
 import { LocalState } from "../services/local/LocalState";
@@ -17,6 +18,7 @@ export interface ServiceList {
     callbackService: ReferenceService<PeerCallback>;
     providersService: ProviderService;
     owService: OpenWalletService;
+    accessModuleService: AccessModuleService;
 }
 
 export interface ServicesContext {
