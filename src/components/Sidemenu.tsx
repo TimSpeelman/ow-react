@@ -55,7 +55,7 @@ export const SidemenuNo: React.FC<Props> = ({ toggleMenu, isOpen }: Props) => {
                             <Icon cubes /><span>Module 'Site Access'</span>
                         </Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link to="/" onClick={() => toggleMenu(false)} className="disabled">
                             <Icon info-circle /><span>About</span>
                         </Link>
@@ -64,7 +64,7 @@ export const SidemenuNo: React.FC<Props> = ({ toggleMenu, isOpen }: Props) => {
                         <Link to="/" onClick={() => toggleMenu(false)} className="disabled">
                             <Icon cog /><span>Settings</span>
                         </Link>
-                    </li>
+                    </li> */}
                     <p><strong>Debug Information:</strong></p>
                     <p>Using agent: {path}</p>
                     <p>Using mid: {myMid}</p>

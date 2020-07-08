@@ -46,7 +46,7 @@ export class Wallet {
         this.localState = new LocalState(this.localAPI);
         this.accessState = new AccessModuleState(this.localState);
         this.ipv8Service = this.agent.service;
-        this.callbackService = new ReferenceService<PeerCallback>({ destroyWhenNoReferences: true, millisToExpire: 20000 });
+        this.callbackService = new ReferenceService<PeerCallback>({ destroyWhenNoReferences: true, millisToExpire: 10 * 60 * 1000 });
         this.contactService = new ContactService(this.localState);
 
 
