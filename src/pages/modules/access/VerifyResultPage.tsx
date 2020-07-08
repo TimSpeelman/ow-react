@@ -15,8 +15,8 @@ export const ModuleAccessVerifyResultPage: React.FC<Props> = ({ siteId, mid }) =
     const [status, setStatus] = useState("pending")
     const [error, setError] = useState("")
     const contacts = useSelector(getContacts);
-    const contact = contacts.find(p => p.mid === mid)
-    const contactName = contact ? contact.name : `Anonymous<${mid.substr(0, 5)}>`
+    const contact = contacts.find(p => p.mid === location?.rootMid)
+    const contactName = contact ? contact.name : `Anonymous<${location?.rootMid.substr(0, 5)}>`
 
     useEffect(() => {
         theWallet.accessModuleService!.verifyAccess(mid, siteId)
