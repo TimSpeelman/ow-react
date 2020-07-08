@@ -15,7 +15,7 @@ export const ModuleTrustedSitesPage: React.FC = () => {
 
             <SubpageHeader
                 pageTitle={"Trusted Sites"}
-                backUrl={"/module/1/roots"}
+                backUrl={"/module/1"}
             />
 
             <main>
