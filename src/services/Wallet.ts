@@ -69,7 +69,7 @@ export class Wallet {
     }
 
     async initServices(): Promise<ServiceList> {
-        const secondsToWaitForPeers = 20;
+        const secondsToWaitForPeers = 5 * 60;
         await this.agent.start(secondsToWaitForPeers * 1000);
 
         const mid = this.agent.mid;
