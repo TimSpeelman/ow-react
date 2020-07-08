@@ -151,5 +151,5 @@ function SpecificGrantAccessPage() {
 
 function SpecificAccessVerifyResultPage() {
     let params: any = useParams();
-    return <ModuleAccessVerifyResultPage siteId={params.siteId} mid={params.mid} />
+    return <ModuleAccessVerifyResultPage siteId={params.siteId} mid={decodeURIComponent(params.mid)} />
 }

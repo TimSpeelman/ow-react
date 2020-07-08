@@ -28,7 +28,7 @@ export const ModuleAccessVerifyPage: React.FC = () => {
         try {
             const d = JSON.parse(code);
             if(d.mid) {
-                window.location.assign(`#/module/1/verify/${selectedSite}/${d.mid}`)
+                window.location.assign(`#/module/1/verify/${selectedSite}/${encodeURIComponent(d.mid)}`)
             }
         } catch (e) {
 
