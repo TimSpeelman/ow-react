@@ -16,12 +16,17 @@ export class ContactService {
     public add(name: string, mid: string): Promise<void> {
         const s = this.state;
         return this.state.store({
-            contacts: [...s.contacts, { name, mid }]
+            contacts: [...s.contacts.filter(c => c.mid !== mid), { name, mid }]
         }).then(() => { });
     }
 
     public findByMid(mid: string): Contact | undefined {
         return this.state.contacts.find(c => c.mid === mid);
+    }
+
+    public getNameString(mid: string) {
+        const c = this.findByMid(mid);
+        return c ? c.name : `Anonymous<${mid.substr(0, 5)}>`;
     }
 
 }

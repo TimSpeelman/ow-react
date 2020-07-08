@@ -1,5 +1,5 @@
 import { OpenWallet } from "@tsow/ow-ssi";
-import { OWAttestOffer } from "@tsow/ow-ssi/dist/types/modules/browser/ow";
+import { OWAttestOffer, OWVerifyResponse, ResolutionResult } from "@tsow/ow-ssi/dist/types/modules/browser/ow";
 import { OWMessage } from "@tsow/ow-ssi/dist/types/src/ow/api/OWAPI";
 import { OWVerification } from "@tsow/ow-ssi/dist/types/src/ow/protocol/OWVerification";
 import uuid from "uuid/v4";
@@ -22,8 +22,8 @@ export class AccessModuleService {
             const { overlay, type, location } = JSON.parse(message.message);
             if (overlay === "AccessModule" && type === "ShareLocation") {
                 const mid = message.sender_mid_b64;
-                const contact = this.contactService.findByMid(mid);
-                const contactName = contact ? contact.name : `Anonymous<${mid.substr(0, 5)}>`;
+                const contactName = this.contactService.getNameString(mid);
+                location.rootMid = mid;
                 this.prompt.prompt({
                     // @ts-ignore
                     type: "AccessModule:ShareLocation",
@@ -55,14 +55,14 @@ export class AccessModuleService {
     addLocation(loc: IMyLocation) {
         const s = this.state.state;
         this.state.store({
-            mySites: [...s.mySites, loc]
+            mySites: [...s.mySites.filter(s => s.id !== loc.id), loc]
         })
     }
 
     addTrustedLocation(loc: ITrustedLocation) {
         const s = this.state.state;
         this.state.store({
-            trustedSites: [...s.trustedSites, loc]
+            trustedSites: [...s.trustedSites.filter(s => s.id !== loc.id), loc]
         })
     }
 
@@ -74,6 +74,8 @@ export class AccessModuleService {
     }
 
     async verifyAccess(peerId: string, locId: string): Promise<AMVerifyResult> {
+        const location = this.getLocationById(locId);
+
         const req: OpenWallet.OWVerifyRequest = {
             ref: uuid(),
             type: "OWVerifyRequest",
@@ -88,9 +90,14 @@ export class AccessModuleService {
             verifier_id: this.agent.mid,
             subject_id: peerId,
             overlay: "AccessModule",
+            metadata: {
+                location: {
+                    id: locId,
+                    name: location?.name,
+                }
+            }
         }
 
-        const location = this.getLocationById(locId);
 
         if (!location) {
             throw new Error(`Location with id '${locId}' unknown.`)
@@ -113,9 +120,11 @@ export class AccessModuleService {
         if (!loc) {
             throw new Error("Expected OWAttestOffer to carry location");
         } else {
+
+
             // @ts-ignore
             const consent: boolean = await this.prompt.prompt({
-                text: `Someone offers you access to location "${loc.name}". Do you accept?`,
+                text: `${this.contactService.getNameString(offer.attester_id)} offers you access to location "${loc.name}". Do you accept?`,
                 type: 'AttestOffer',
             })
 
@@ -126,6 +135,25 @@ export class AccessModuleService {
             }
             this.addTrustedLocation(trustedLoc);
             return consent;
+        }
+    }
+
+    async handleRequest(session: OWVerification, result: ResolutionResult): Promise<OWVerifyResponse | false> {
+        const loc = session.request.metadata.location;
+        if (!loc) {
+            throw new Error("Expected OWVerifyRequest to carry location");
+        } else {
+            if (result.status === "unresolved") {
+                return this.prompt.prompt({
+                    text: `${this.contactService.getNameString(session.verifierId)} wishes to verify your access to location "${loc.name}". However, you do not yet have access.`,
+                    type: 'Info',
+                }).then((ans) => false)
+            } else {
+                return this.prompt.prompt({
+                    text: `${this.contactService.getNameString(session.verifierId)} wishes to verify your access to location "${loc.name}". Do you accept?`,
+                    type: 'AttestOffer',
+                }).then((ans) => !ans ? false : result.response!)
+            }
         }
     }
 

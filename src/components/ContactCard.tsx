@@ -15,8 +15,8 @@ export const ContactCard: React.FC<Props> = (p) => (
                 {p.sub && <div className="secondary">{p.sub}</div>}
             </div>
             <div className="tool">
-                <div className="clickable">
-                    <Icon info-circle />
+                <div className="clickable" onClick={p.onClickConnect}>
+                    <Icon signal style={{ textColor: p.online ? "green" : "black" }} />
                 </div>
             </div>
         </div>
@@ -29,4 +29,6 @@ interface Props {
     logoUrl?: string;
     title: string;
     sub?: string;
+    online?: boolean;
+    onClickConnect: () => void;
 }

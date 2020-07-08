@@ -59,8 +59,14 @@ export const Prompter: React.FC = () => {
         open={open}
     >
         <p>{p?.text}</p>
-        <Button onClick={() => onSubmit(true)}>Yes</Button>
-        <Button onClick={() => onSubmit(false)}>No</Button>
+        {p?.type === "Info" ? (
+            <Button onClick={() => onSubmit(false)}>Ok</Button>
+        ) : (
+                <div>
+                    <Button onClick={() => onSubmit(true)}>Yes</Button>
+                    <Button onClick={() => onSubmit(false)}>No</Button>
+                </div>
+            )}
     </Modal>
 }
 

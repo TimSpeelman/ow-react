@@ -9,6 +9,7 @@ import { useInternationalization } from "../hooks/useInternationalization";
 import { useSelector } from "../hooks/useSelector";
 import { useServices } from "../hooks/useServices";
 import { getContacts, getProviders } from "../services/local/selectors";
+import { theWallet } from "../services/services";
 
 export const ContactIndexPage: React.FC = () => {
 
@@ -32,6 +33,17 @@ export const ContactIndexPage: React.FC = () => {
     }
 
     const isEmpty = contacts.length === 0 && providers.length === 0;
+
+    const isConnected = (mid: string) => false;
+    const connect = (mid: string) => theWallet.agent.api.connectPeer(mid)
+        .then((r) => theWallet.prompt.prompt({
+            type: "Info",
+            text: `Attempt to connect to ${mid} resulted in ${r.length} peers: ${JSON.stringify(r)}`
+        }))
+        .catch((e) => theWallet.prompt.prompt({
+            type: "Info",
+            text: `Attempt to connect to ${mid} gave error: ${e.message}.`
+        }))
 
     return (
         <div className="subpage nav-compact">
@@ -58,19 +70,22 @@ export const ContactIndexPage: React.FC = () => {
 
                         {contacts.length === 0 ? <small>No people yet..</small> :
                             contacts.map(contact => (
-                                <Link to={`/contacts/${encodeURIComponent(contact.mid)}`} key={contact.mid}>
-                                    <ContactCard title={contact.name} sub={contact.mid} />
-                                </Link>
+                                // <Link to={`/contacts/${encodeURIComponent(contact.mid)}`} key={contact.mid}>
+                                <ContactCard title={contact.name} sub={contact.mid} onClickConnect={() => connect(contact.mid)}
+                                    online={isConnected(contact.mid)} />
+                                // </Link>
                             ))}
 
                         <h1>Organisations ({providers.length})</h1>
                         {providers.map(provider => (
-                            <Link to={`/contacts/${encodeURIComponent(provider.mid_b64)}`} key={provider.mid_b64}>
-                                <ContactCard
-                                    logoUrl={provider.logo_url}
-                                    title={fromLanguageDict(provider.title)}
-                                />
-                            </Link>
+                            // <Link to={`/contacts/${encodeURIComponent(provider.mid_b64)}`} key={provider.mid_b64}>
+                            <ContactCard
+                                logoUrl={provider.logo_url}
+                                title={fromLanguageDict(provider.title)}
+                                onClickConnect={() => connect(provider.mid_b64)}
+                                online={isConnected(provider.mid_b64)}
+                            />
+                            // </Link>
                         ))}
 
                         <BottomTools>

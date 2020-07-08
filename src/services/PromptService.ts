@@ -24,10 +24,16 @@ export type PromptResolve = (a: any) => void
 export type PromptType =
     PromptShare |
     PromptAttestOffer |
-    PromptWarn
+    PromptWarn |
+    PromptInfo
 
 export interface PromptShare {
     type: "Share",
+    text: string,
+}
+
+export interface PromptInfo {
+    type: "Info",
     text: string,
 }
 

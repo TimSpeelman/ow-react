@@ -51,8 +51,13 @@ export class Wallet {
 
 
         this.agent.verifyRequestHandler = (s, r) => {
-            return this.prompt.prompt({ type: "Share", text: "Someone is asking you to share" })
-                .then((ok) => ok ? r.response! : false)
+            if (s.request.overlay === "AccessModule") {
+                return this.accessModuleService!.handleRequest(s, r);
+            } else {
+                const contactName = this.contactService.getNameString(s.verifierId);
+                return this.prompt.prompt({ type: "Share", text: `${contactName} is asking you to share something.` })
+                    .then((ok) => ok ? r.response! : false)
+            }
         }
 
         this.agent.attestOfferHandler = async (s) => {
