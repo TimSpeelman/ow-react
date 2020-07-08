@@ -26,6 +26,16 @@ export function getProviderByMid(mid: string) {
     }, null);
 }
 
+export function getContacts(state: IState) {
+    return state.contacts;
+}
+
+export function getContactByMid(mid: string) {
+    return memoizeUnary((state: IState) => {
+        return state.contacts.find(c => c.mid === mid)
+    }, null);
+}
+
 interface WithProvider {
     provider: Recipe.RecipeServiceDescriptor
 }

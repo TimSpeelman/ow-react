@@ -4,6 +4,7 @@ import { Dict } from "./Dict";
 export interface IState {
     attributes: LocalAttribute[];
     providers: Dict<Recipe.RecipeServiceDescriptor>;
+    contacts: Contact[];
 }
 
 export interface LocalAttribute {
@@ -16,4 +17,9 @@ export interface LocalAttribute {
     provider_title: Dict<string>;
     signer_mid_b64: string;
     metadata: any;
+}
+
+export interface Contact {
+    mid: string;
+    name: string;
 }

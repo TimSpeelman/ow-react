@@ -4,6 +4,7 @@ import uuid from "uuid/v4";
 import { Button } from "../../../components/Button";
 import { SubpageHeader } from "../../../components/SubpageHeader";
 import { useServices } from "../../../hooks/useServices";
+import { theWallet } from "../../../services/services";
 /** A manager adds the locations he controls on this page */
 export const ModuleCreateSitePage: React.FC = () => {
 
@@ -15,7 +16,8 @@ export const ModuleCreateSitePage: React.FC = () => {
         e.preventDefault();
 
         const id = uuid();
-        services?.accessModuleService.addLocation({ name, grants: [], id })
+        const myMid = theWallet.agent.mid;
+        services?.accessModuleService.addLocation({ name, grants: [], id, rootMid: myMid })
 
         window.location.assign("#/module/1/my-locs");
     }

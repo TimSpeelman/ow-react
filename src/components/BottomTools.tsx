@@ -1,8 +1,8 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "./Icon";
 
-export const BottomTools: React.FC<Props> = (p: Props) => (
+export const BottomTools: React.FC<PropsWithChildren<Props>> = (p) => (
     <div className="bottom-tools">
         {!p.showQR ? "" :
             <Link to={"/qr"} >
@@ -17,6 +17,7 @@ export const BottomTools: React.FC<Props> = (p: Props) => (
                 <Icon plus />
             </Link>
         }
+        {p.children}
     </div>
 )
 

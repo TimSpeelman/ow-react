@@ -1,7 +1,7 @@
 import { IPv8, OpenWallet, Recipe } from "@tsow/ow-ssi";
+import { OWAttestedAttr, OWVerifyReqAttr } from "@tsow/ow-ssi/dist/types/modules/browser/ow";
 import Axios from "axios";
 import { Dict } from "../types/Dict";
-import { LocalAttribute } from "../types/State";
 import { LocalState } from "./local/LocalState";
 import { ProviderService } from './ProviderService';
 
@@ -28,11 +28,11 @@ export class OpenWalletService {
         providerId: string,
         procedureId: string,
         onConsentStore: (data: OfferedAttribute[]) => Promise<boolean>
-    ): Promise<LocalAttribute[]> {
+    ): Promise<OWAttestedAttr[]> {
 
         const provider = this.providersService.providers[providerId];
         const recipe = provider.recipes[procedureId];
-        const requirements = (recipe.verify_request?.attributes || []).map(a => a.name);
+        const requirements = (recipe.verify_request?.attributes || []).map((a: OWVerifyReqAttr) => a.name);
 
         // Resolution TODO update
         const dataToShare: Dict<string> = this.localState.attributes
@@ -85,13 +85,13 @@ export class OpenWalletService {
 
         const attributes = await process.requestAttestation(offer);
 
-        console.log('Received result', attributes);
+        // console.log('Received result', attributes);
 
         if (!attributes) {
             return [];
         }
 
-        return attributes.map((attr): LocalAttribute => {
+        return attributes.map((attr): OWAttestedAttr => {
             const attrDesc = recipe.attributes.find((a: any) => a.name === attr.name);
 
             if (attr && attrDesc) {
@@ -100,9 +100,8 @@ export class OpenWalletService {
                     value: attr.value,
                     hash: attr.hash,
                     time: Date.now(), // FIXME should come from client
-                    provider_title: provider.title,
                     title: attrDesc.title,
-                    type: attrDesc.format,
+                    format: attrDesc.format,
                     metadata: attr.metadata,
                     signer_mid_b64: attr.signer_mid_b64,
                 };

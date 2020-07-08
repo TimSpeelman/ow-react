@@ -4,9 +4,9 @@ import { ProcedureDonePage } from "../pages/ProcedureDonePage";
 import { ReceiveAttributesPage } from "../pages/ReceiveAttributesPage";
 import { ShareRequestPage } from "../pages/ShareRequestPage";
 import { RequestProcedureFlowRunner, Status } from "../services/RequestProcedureFlowRunner";
-import { wallet } from "../services/services";
+import { theWallet } from "../services/services";
 
-const { attributeService, owService, providersService } = wallet;
+const { agent, owService, providersService } = theWallet;
 
 enum Step { INIT, SHARE, RECEIVE, DONE };
 
@@ -17,7 +17,7 @@ export const CredentialCreateFlow: React.FC = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            flow = new RequestProcedureFlowRunner(providersService!, owService!, attributeService);
+            flow = new RequestProcedureFlowRunner(providersService!, owService!, agent);
             flow.hookStep.on(step => { console.log(step); setStep(step) });
 
         }, 2000);

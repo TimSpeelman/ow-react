@@ -4,10 +4,12 @@ import { Button } from "../../../components/Button";
 import { CredentialCard } from "../../../components/CredentialCard";
 import { Icon } from "../../../components/Icon";
 import { Modal } from "../../../components/Modal";
+import { ModalContactPick } from "../../../components/ModalContactPick";
 import { SubpageHeader } from "../../../components/SubpageHeader";
 import { useServices } from "../../../hooks/useServices";
 import { getMyLocations } from "../../../services/access-module/selectors";
 import { useAMSelector } from "../../../services/access-module/useSelector";
+import { theWallet } from "../../../services/services";
 
 export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
 
@@ -24,7 +26,14 @@ export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
         window.location.assign("#/module/1/my-locs")
     }
 
-    const [grantModalOpen, setGrantModalOpen] = useState(false);
+    const [shareModalOpen, setShareModalOpen] = useState(false);
+    const shareLocation = async (mid: string) => {
+        const sent = await theWallet.accessModuleService!.shareLocation(siteId, mid);
+        if (!sent) {
+            alert("Location could not be sent")
+        }
+        setShareModalOpen(false);
+    }
 
     return !location ? <div></div> : (
         <div className="subpage nav-compact">
@@ -39,15 +48,14 @@ export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
                 </div>
             </Modal>
 
-            <Modal open={grantModalOpen} onRequestClose={() => setGrantModalOpen(false)}>
-                <div>
-                    <h1>Delete Location "{location.name}"</h1>
-                    <p>Are you sure you wish to delete this location?</p>
-
-                    <Button primary onClick={deleteLocation}>Delete</Button>
-                    <Button onClick={() => setGrantModalOpen(false)}>Cancel</Button>
-                </div>
-            </Modal>
+            <ModalContactPick
+                open={shareModalOpen}
+                onRequestClose={() => setShareModalOpen(false)}
+                onSubmit={shareLocation}
+                title={`Share Location "${location.name}"`}
+                description={`With whom would you like to share this location? The receiver will be able to verify someone's access to the location.`}
+                submitText={"Share"}
+            />
 
             <SubpageHeader
                 pageTitle={"Manage Location Access"}
@@ -58,7 +66,7 @@ export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
                 <h1>Location "{location.name}"</h1>
                 <p>Share this location with the gate keepers.</p>
 
-                <Button>
+                <Button onClick={() => setShareModalOpen(true)}>
                     <Icon shield-alt /> Share with Gate Keepers
                 </Button>
 

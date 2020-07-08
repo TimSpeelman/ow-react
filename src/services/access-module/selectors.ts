@@ -16,3 +16,12 @@ export function getMyLocations(state: IState & ExtendedState): Array<IMyLocation
 export function getTrustedLocations(state: IState & ExtendedState): Array<ITrustedLocation> {
     return getRoot(state).trustedSites;
 }
+
+export function getAllLocations(state: IState & ExtendedState): Array<ITrustedLocation | IMyLocation> {
+    return [...getMyLocations(state), ...getTrustedLocations(state)];
+}
+
+export function getLocationById(id: string) {
+    return (state: IState & ExtendedState): ITrustedLocation | IMyLocation | undefined =>
+        getAllLocations(state).find(l => l.id === id);
+}

@@ -8,6 +8,7 @@ export const DemoPage: React.FC = () => {
 
     const request: InformedVerifyRequest = {
         request: {
+            type: "OWVerifyRequest",
             attributes: [],
             verifier_id: "VRFID",
         },
@@ -19,7 +20,7 @@ export const DemoPage: React.FC = () => {
                     ref: "a",
                     request: { name: "name", format: "id_metadata", ref: "a" },
                     results: [
-                        { hash: "xsd", value: "Tim Speelman", format: "id_metadata", name: "name", signer_mid_b64: "xyz", metadata: 1 }
+                        { hash: "xsd", value: "Tim Speelman", format: "id_metadata", name: "name", signer_mid_b64: "xyz", metadata: 1, time: 0, title: {} }
                     ],
                     responses: [{ hash: "xsd", ref: "a", }],
                 },
@@ -28,7 +29,7 @@ export const DemoPage: React.FC = () => {
                     ref: "a",
                     request: { name: "age", format: "id_metadata", ref: "a" },
                     results: [
-                        { hash: "xsd", value: "28", format: "id_metadata", name: "age", signer_mid_b64: "xyz", metadata: 1 }
+                        { hash: "xsd", value: "28", format: "id_metadata", name: "age", signer_mid_b64: "xyz", metadata: 1, time: 0, title: {} }
                     ],
                     responses: [{ hash: "xsd", ref: "a", }],
                 }

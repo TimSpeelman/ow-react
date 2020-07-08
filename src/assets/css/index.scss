@@ -203,6 +203,13 @@ main {
     .show-footer-tools & {
         padding-bottom: $tools_height;
     }
+
+    &.flex-center{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
 }
 
 

@@ -15,7 +15,7 @@ export class AccessModuleState {
     constructor(protected localState: LocalState) {
         this.state = this.defaultState;
         localState.stateChangeHook.on((s) => {
-            console.log("monitoring", s)
+            // console.log("monitoring", s)
             // @ts-ignore
             if (!s.accessModule) {
                 this.store(this.defaultState);
@@ -23,7 +23,7 @@ export class AccessModuleState {
                 // @ts-ignore
                 this.state = s.accessModule;
             }
-            console.log("Resulting", this.state)
+            // console.log("Resulting", this.state)
         })
     }
 
@@ -47,6 +47,7 @@ export interface IAccessModuleState {
 
 export interface IMyLocation {
     name: string;
+    rootMid: string;
     grants: IGrant[];
     id: string;
 }

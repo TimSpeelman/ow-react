@@ -5,14 +5,14 @@ import { I18nContextProvider } from "./hooks/useInternationalization";
 import { LocalStateContextProvider } from "./hooks/useLocalState";
 import { MenuContextProvider } from "./hooks/useMenu";
 import { ServicesContextProvider } from "./hooks/useServices";
-import { initServices, wallet } from "./services/services";
+import { initServices, theWallet } from "./services/services";
 import * as serviceWorker from './serviceWorker';
 
 const root = (
-    <ServicesContextProvider initServices={initServices} path={wallet.localhostBase}>
+    <ServicesContextProvider initServices={initServices} path={theWallet.localhostBase}>
         <MenuContextProvider>
             <I18nContextProvider fallbackLangs={["en_US", "en_UK"]}>
-                <LocalStateContextProvider localState={wallet.localState}>
+                <LocalStateContextProvider localState={theWallet.localState}>
                     <App />
                 </LocalStateContextProvider>
             </I18nContextProvider>

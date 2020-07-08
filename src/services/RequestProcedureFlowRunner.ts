@@ -1,7 +1,6 @@
-import { Recipe } from "@tsow/ow-ssi";
+import { OpenWallet, Recipe } from "@tsow/ow-ssi";
 import { AttributeReceiveRequest, AttributeShareRequest } from "../types/types";
 import { Hook } from "../util/Hook";
-import { AttributesService } from "./AttributeService";
 import { OpenWalletService } from "./OpenWalletService";
 import { ProviderService } from "./ProviderService";
 
@@ -23,7 +22,7 @@ export class RequestProcedureFlowRunner {
     constructor(
         private providersService: ProviderService,
         private walletService: OpenWalletService,
-        private attributeService: AttributesService,
+        private agent: OpenWallet.OWAgent,
     ) { }
 
     get provider(): Recipe.RecipeServiceDescriptor | null {
@@ -101,7 +100,7 @@ export class RequestProcedureFlowRunner {
 
 
             if (result) {
-                result.forEach(a => this.attributeService.storeAttribute(a));
+                result.forEach(a => this.agent.repo.put(a));
                 this.showMessage('The attributes were successfully added to your identity.');
                 this.setStatus(Status.COMPLETE);
                 this.done();
@@ -121,7 +120,7 @@ export class RequestProcedureFlowRunner {
     }
 
     protected askUserToReceive(data: any) {
-        console.log("Asking user", data);
+        // console.log("Asking user", data);
         this.receiveRequest = {
             attributes: data,
             done: () => { },

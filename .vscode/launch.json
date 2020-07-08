@@ -53,5 +53,31 @@
                 "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.commonjs.json",
             }
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test Current File w/ Mocha DEBUG",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "--nolazy",
+                "--ui",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "--require",
+                "ts-node/register",
+                "${relativeFile}"
+            ],
+            // "outFiles": [ "${workspaceFolder}/dist/**/*.js" ],
+            "cwd": "${workspaceRoot}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "protocol": "inspector",
+            "env": {
+                "DEBUG": "ow-ssi:*",
+                "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.commonjs.json",
+            }
+        },
     ],
 }

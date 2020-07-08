@@ -23,8 +23,16 @@ export const ModuleAccessVerifyPage: React.FC = () => {
     const [qrOpen, setQrOpen] = useState(false);
 
     const handleScan = (code: string)  => {
-        setQR(code);
         setQrOpen(false);
+
+        try {
+            const d = JSON.parse(code);
+            if(d.mid) {
+                window.location.assign(`#/module/1/verify/${selectedSite}/${d.mid}`)
+            }
+        } catch (e) {
+
+        }        
     }
 
     return (

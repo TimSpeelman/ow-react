@@ -1,15 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import { OWAttestedAttr } from "@tsow/ow-ssi/dist/types/modules/browser/ow";
+import React, { useEffect, useMemo, useState } from 'react';
 import { BottomTools } from "../components/BottomTools";
 import { CredentialCard } from "../components/CredentialCard";
 import { SubpageHeader } from "../components/SubpageHeader";
 import { useClock } from "../hooks/useClock";
 import { useInternationalization } from "../hooks/useInternationalization";
-import { usePromised } from "../hooks/usePromised";
 import { useCallbackReference } from "../hooks/useQR";
 import { useSelector } from "../hooks/useSelector";
 import { useServices } from "../hooks/useServices";
-import { getAttributeByHash } from "../services/local/selectors";
+import { getContactByMid, getProviderByMid } from "../services/local/selectors";
 import { makeEncoder, VerificationOfferCodec } from "../services/QRService";
+import { theWallet } from "../services/services";
 
 const encodeVerifOffer = makeEncoder(new VerificationOfferCodec());
 
@@ -17,8 +18,16 @@ export const CredentialDetailPage: React.FC<Props> = ({ id, useReferenceQR }) =>
 
     const { services } = useServices();
     const { fromLanguageDict } = useInternationalization();
-    const attr = useSelector(useMemo(() => getAttributeByHash(id), [id]));
-    const myMid = usePromised(() => services!.ipv8Service.api.getMyId().catch(e => console.error(e)));
+    const [attr, setAttr] = useState<OWAttestedAttr | undefined>(undefined);
+    useEffect(() => {
+        theWallet.agent.repo.all()
+            .then(attributes => setAttr(attributes.find(x => x.hash === id)))
+    }, [id]);
+    const myMid = theWallet.agent.mid;
+
+    const provider = useSelector(useMemo(() => getProviderByMid(attr ? attr.signer_mid_b64 : ""), [id]));
+    const knownContact = useSelector(useMemo(() => getContactByMid(attr ? attr.signer_mid_b64 : ""), [id]));
+    const displayContact = knownContact ? knownContact : { name: `Anonymous<${attr?.signer_mid_b64.substr(0, 10)}...>`, mid: attr?.signer_mid_b64 }
 
     // The user may pick either the QR from the credential or from the attribute
     const [selectedQR, setSelectedQR] = useState<string>("");
@@ -33,7 +42,8 @@ export const CredentialDetailPage: React.FC<Props> = ({ id, useReferenceQR }) =>
 
     const time = useClock(1000);
 
-    if (!useReferenceQR && myMid) {
+
+    if (!useReferenceQR && myMid && attr) {
         const expirationInSeconds = 10;
         const verificationOffer = {
             mid: myMid!,
@@ -54,23 +64,39 @@ export const CredentialDetailPage: React.FC<Props> = ({ id, useReferenceQR }) =>
             />
 
             <main>
-                {!attr ? "Credential Unknown.." : (
-                    <CredentialCard
-                        title={fromLanguageDict(attr.title)}
-                        issuerName={fromLanguageDict(attr.provider.title)}
-                        imageUrl={attr.provider.logo_url}
-                        withQRs
-                        onDisplayQR={toggleQR}
-                        qrValue={qrValue}
-                        value={attr.value}
-                        showDetails={true}
-                        showMeta={true}
-                        metadata={[
-                            { key: "Signed by", value: fromLanguageDict(attr.provider.title) },
-                            { key: "Created at", value: `${attr.time}` },
-                            { key: "Valid until", value: "2020-09-01 13:20:00 CET" },
-                        ]} />
-                )}
+                {!attr ? "Credential Unknown.." :
+                    !!provider ? (
+                        <CredentialCard
+                            title={fromLanguageDict(attr.title)}
+                            issuerName={fromLanguageDict(provider.title)}
+                            imageUrl={provider.logo_url}
+                            withQRs
+                            onDisplayQR={toggleQR}
+                            qrValue={qrValue}
+                            value={attr.value}
+                            showDetails={true}
+                            showMeta={true}
+                            metadata={[
+                                { key: "Signed by", value: fromLanguageDict(provider.title) },
+                                { key: "Created at", value: `${attr.time}` },
+                                { key: "Valid until", value: "2020-09-01 13:20:00 CET" },
+                            ]} />
+                    ) : (
+                            <CredentialCard
+                                title={attr.name}
+                                issuerName={displayContact.name}
+                                withQRs
+                                onDisplayQR={toggleQR}
+                                qrValue={qrValue}
+                                value={attr.value}
+                                showDetails={true}
+                                showMeta={true}
+                                metadata={[
+                                    { key: "Signed by", value: displayContact.name },
+                                    { key: "Created at", value: `${attr.time}` },
+                                    { key: "Valid until", value: "2020-09-01 13:20:00 CET" },
+                                ]} />
+                        )}
             </main>
 
             <BottomTools showQR />

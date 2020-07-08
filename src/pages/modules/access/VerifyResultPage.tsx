@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/Button";
 import { SubpageHeader } from "../../../components/SubpageHeader";
+import { getLocationById } from "../../../services/access-module/selectors";
+import { useAMSelector } from "../../../services/access-module/useSelector";
+import { theWallet } from "../../../services/services";
 
-export const ModuleAccessVerifyResultPage: React.FC = () => {
+export const ModuleAccessVerifyResultPage: React.FC<Props> = ({ siteId, mid }) => {
 
-    const sites = [{ name: "Nijmegen" }, { name: "Delft" }, { name: "Enschede" }, { name: "Utrecht" }]
-    const options = sites.map(s => ({ value: s.name, label: s.name }))
+    const location = useAMSelector(getLocationById(siteId));
 
-    const [selectedSite, setSite] = useState("");
-    const [status, setStatus] = useState("succeeded");
-    const site = sites[0];
+    const [status, setStatus] = useState("pending")
+    const [error, setError] = useState("")
 
-    return (
+    useEffect(() => {
+        theWallet.accessModuleService!.verifyAccess(mid, siteId)
+            .then((result) => {
+                if (result.success && result.correctSigner) {
+                    setStatus("succeeded")
+                } else {
+                    setStatus("failed")
+                }
+            })
+            .catch((error) => {
+                setStatus("error");
+                setError(error.message);
+            })
+    }, [])
+
+    return !location ? <div>...</div> : (
         <div className="subpage nav-compact">
 
             <SubpageHeader
@@ -38,9 +54,12 @@ export const ModuleAccessVerifyResultPage: React.FC = () => {
                         <div>
                             <p>The person was granted access to:</p>
 
-                            <p><strong>{site.name}</strong></p>
+                            <p><strong>{location.name}</strong></p>
 
-                            <p>By your contact Tim Speelman</p>
+                            {"grants" in location
+                                ? <p>By you.</p>
+                                : <p>By your contact Tim Speelman.</p>
+                            }
 
                             <Link to="/module/1">
                                 <Button>Return</Button>
@@ -61,8 +80,25 @@ export const ModuleAccessVerifyResultPage: React.FC = () => {
                     )
                 }
 
+                {
+                    status === "error" && (
+                        <div>
+                            <p>Something went wrong: {error}.</p>
+
+                            <Link to="/module/1">
+                                <Button>Return</Button>
+                            </Link> <br />
+                        </div>
+                    )
+                }
+
             </main>
 
         </div>
     )
+}
+
+export interface Props {
+    mid: string;
+    siteId: string;
 }

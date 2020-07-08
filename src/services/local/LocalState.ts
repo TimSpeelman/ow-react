@@ -17,6 +17,7 @@ export class LocalState {
     private defaultState: IState = {
         attributes: [],
         providers: {},
+        contacts: [],
     };
 
     private _state: IState = this.defaultState;
@@ -33,6 +34,10 @@ export class LocalState {
         return this._state.providers;
     }
 
+    get contacts() {
+        return this._state.contacts;
+    }
+
     constructor(private localApi: LocalAPI) {
 
         this.fetch();
@@ -42,7 +47,7 @@ export class LocalState {
         return this.localApi.getState()
             .then(response => {
                 if (!response) {
-                    console.log("Local state is empty, creating default");
+                    // console.log("Local state is empty, creating default");
                     this.store(this.defaultState);
                 } else {
                     this.updateState(response)
@@ -57,7 +62,7 @@ export class LocalState {
 
     protected updateState(newState: Partial<IState>) {
         this._state = { ...this.state, ...newState };
-        console.log("UPDATED LOCAL STATE", this._state);
+        // console.log("UPDATED LOCAL STATE", this._state);
         this.stateChangeHook.fire(this.state);
     }
 

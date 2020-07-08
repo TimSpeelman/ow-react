@@ -3,10 +3,12 @@ import QRCode from "qrcode.react";
 import { default as React } from 'react';
 import CopyToClipboard from "react-copy-to-clipboard";
 import { SubpageHeader } from "../components/SubpageHeader";
+import { theWallet } from "../services/services";
 
 export const BadgePage: React.FC = () => {
 
-    const qrValue = "";
+    const mid = theWallet.agent.mid
+    const qrValue = JSON.stringify({ mid });
 
     return (
         <div className="subpage nav-compact">
@@ -16,14 +18,17 @@ export const BadgePage: React.FC = () => {
                 backUrl={"/"}
             />
 
-            <main>
-                <h1>Badge</h1>
-                <p>Show your badge with mate</p>
+            <main className="flex-center">
+                <div className="card-item" style={{ padding: 16 }}>
+                    <h1>My Badge</h1>
+                    <p>By scanning a badge, people can connect their Wallets. This may be
+                        necessary when proving who you are.</p>
 
-                <div className="qr-code">
-                    <CopyToClipboard text={qrValue}>
-                        <QRCode value={qrValue} size={256} level={"M"} />
-                    </CopyToClipboard>
+                    <div className="qr-code">
+                        <CopyToClipboard text={qrValue}>
+                            <QRCode value={qrValue} size={256} level={"M"} />
+                        </CopyToClipboard>
+                    </div>
                 </div>
             </main>
 

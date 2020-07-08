@@ -45,7 +45,7 @@ export class CredentialVerifyFlowRunner {
             }],
             // { maxAgeInSeconds: 3600 * 24 * 365 }
         ).then((result) => {
-            this.showVerificationResult(result);
+            this.showVerificationResult(result.success);
         })
     }
 
