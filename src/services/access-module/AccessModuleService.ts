@@ -5,7 +5,7 @@ import { OWVerification } from "@tsow/ow-ssi/dist/types/src/ow/protocol/OWVerifi
 import uuid from "uuid/v4";
 import { ContactService } from "../ContactService";
 import { PromptService } from "../PromptService";
-import { AccessModuleState, IMyLocation, ITrustedLocation } from "./State";
+import { AccessModuleState, IGrant, IMyLocation, ITrustedLocation } from "./State";
 
 export class AccessModuleService {
 
@@ -195,6 +195,18 @@ export class AccessModuleService {
 
 
         const session = await this.agent.ter.attest(offer);
+
+        if (session.isAttested) {
+            const s = this.state.state;
+            const grant: IGrant = { hash: "FIXME", subjectId: peerId, time: 0 }
+            this.state.store({
+                mySites: s.mySites.map(site =>
+                    site.id !== locId ? site : {
+                        ...site,
+                        grants: [...site.grants.filter(p => p.subjectId !== peerId), grant]
+                    })
+            })
+        }
 
         return session.isAttested;
     }

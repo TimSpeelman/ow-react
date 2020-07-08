@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CredentialCard } from "../../../components/CredentialCard";
 import { SubpageHeader } from "../../../components/SubpageHeader";
+import { useServices } from "../../../hooks/useServices";
+import { getTrustedLocations } from "../../../services/access-module/selectors";
+import { useAMSelector } from "../../../services/access-module/useSelector";
 
 export const ModuleTrustedSitesPage: React.FC = () => {
 
-    const sites = [{ name: "Nijmegen" }, { name: "Delft" }, { name: "Enschede" }, { name: "Utrecht" }]
-    const options = sites.map(s => ({ value: s.name, label: s.name }))
-
-    const [selectedSite, setSite] = useState("");
-    const [status, setStatus] = useState("succeeded");
-    const site = sites[0];
-
+    const sites = useAMSelector(getTrustedLocations);
+    const { services } = useServices();
+    const contactService = services!.contactService;
     return (
         <div className="subpage nav-compact">
 
@@ -20,17 +19,16 @@ export const ModuleTrustedSitesPage: React.FC = () => {
             />
 
             <main>
-                <h1>Trusted Parties</h1>
+                <h1>Trusted Locations ({sites.length})</h1>
                 <p>These are the sites and managers you trust to control them.
                      To add one, ask a manager to share a site with you.</p>
 
-                <CredentialCard
-                    issuerName={"Trusted Manager: Helga J"}
-                    title={"Nijmegen Construction"} />
+                {sites.map(loc => (
+                    <CredentialCard
+                        issuerName={`Trusted Manager: ${contactService.getNameString(loc.rootMid)}`}
+                        title={loc.name} />
+                ))}
 
-                <CredentialCard
-                    issuerName={"Trusted Manager: Tim S"}
-                    title={"Delft Campus"} />
             </main>
 
         </div>

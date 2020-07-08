@@ -81,8 +81,8 @@ export const ModuleManageSitePage: React.FC<Props> = ({ siteId }) => {
 
                 {location.grants.map(g => (
                     <CredentialCard
-                        issuerName={"x days ago"}
-                        title={g.subjectId} />
+                        issuerName={""}
+                        title={services ? services.contactService.getNameString(g.subjectId) : g.subjectId} />
 
                 ))}
 

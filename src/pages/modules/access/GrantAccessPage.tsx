@@ -59,13 +59,13 @@ export const ModuleGrantAccessPage: React.FC<Props> = ({ siteId }) => {
                     issuerName={`${site.grants.length} people have access`}
                     title={site.name} />
 
-                <p>How would you like to share this access?</p>
+                {/* <p>How would you like to share this access?</p> */}
 
                 <Button onClick={() => setModalOpen(true)}><Icon users /> Share with a Contact</Button>
-
+                {/* 
                 <Button onClick={() => setQROpen(true)}><Icon id-badge /> Scan a Badge</Button>
 
-                <Button><Icon share-alt /> Share a Link</Button>
+                <Button><Icon share-alt /> Share a Link</Button> */}
 
             </main>
 
